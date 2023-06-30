@@ -1,0 +1,1251 @@
+% main.tex
+% todo:
+% - check debug
+% - comment RP^2  (+ beta = pi/2, delta undefined-coord stuff-, etc.
+% - comment on following global implicit max of ham (at least sign check on d2h/dbeta2) by continuation
+% - write intro at the end of 1.3
+% - update Fig. 5 (and some other)
+% - (29): add sum_j nu_j(f) = 1 (in SDP terms)
+% - check all Figure captions
+\documentclass[AMA,STIX1COL]{WileyNJD-v2}
+\usepackage{geometry}
+%\usepackage{amsmath}
+%\usepackage{graphicx} 
+%\usepackage[square,sort,comma,numbers]{natbib} 
+\usepackage{amsmath} 
+%\usepackage[hyphens]{url} 
+%%\usepackage{soul}
+%\usepackage{fancyhdr} % To use the image as header
+%\usepackage{tabularx}
+%\usepackage{multirow} % To have multi rows
+%\usepackage{colortbl} % To color table lines
+%\usepackage{booktabs}
+\usepackage{array}
+%\usepackage[super]{nth} % for cardinal numbers typesetting
+%\usepackage{algorithm}
+%\usepackage[end]{algpseudocode}
+%%\usepackage{wasysym}
+\usepackage{subcaption}
+%\usepackage[square,sort,comma,numbers]{natbib} %
+%\usepackage{enumitem}
+%\usepackage[dvipsnames]{xcolor}
+%%\usepackage{indentfirst}
+%\usepackage{comment}
+%\usepackage{amsfonts}
+%\usepackage{mathtools}
+%\mathtoolsset{showonlyrefs}
+
+%\newcommand{\uvect}[1]{\boldsymbol{\hat{#1}}}
+\newcommand{\uvect}[1]{\hat{#1}}
+%\newcommand{\vect}[1]{\boldsymbol{#1}}
+\newcommand{\vect}[1]{#1}
+\newcommand{\sign}[1]{\boldsymbol{sign} \, #1 }
+\newcommand{\de}[2]{\dfrac{\partial \, #1}{\partial \, #2}}
+\newcommand{\dt}[1]{\dfrac{\textrm{d} \, #1}{\textrm{d} \, t}}
+\newcommand{\ds}[1]{\dfrac{\textrm{d} \, #1}{\textrm{d} \, s}}
+\newcommand{\dtau}[1]{\dfrac{\textrm{d} \, #1}{\textrm{d} \, \tau}}
+\newcommand{\norm}[1]{\left\lVert#1\right\rVert}
+\newcommand{\conv}{\text{conv}}
+\newcommand{\avg}[1]{\widehat{#1}}
+\renewcommand{\phi}{\varphi}
+\renewcommand{\epsilon}{\varepsilon}
+\newcommand{\veps}{\varepsilon}
+\newcommand{\vphi}{\varphi}
+\newcommand{\R}{\mathbf{R}}
+\newcommand{\Z}{\mathbf{Z}}
+%\newcommand{\greentext}{\textcolor{SeaGreen}}
+\newcommand{\greentext}{\textcolor{green}}
+\newcommand{\bluetext}{\textcolor{blue}}
+\newcommand{\redtext}{\textcolor{red}}
+\newcommand{\add}[1]{\greentext{#1}}
+\newcommand{\rem}[1]{\redtext{\sl{#1}}}
+\newcommand{\com}[1]{\bluetext{***#1***}}
+\newcommand{\doubt}[1]{\greentext{#1}}
+\newcommand{\jbc}[1]{\bluetext{#1}}
+\newcommand{\mybar}[1]{#1}
+
+%\newtheorem{prop}{Proposition}
+%\newtheorem{theorem}{Theorem}
+%\newtheorem{remark}{Remark}
+
+\usepackage{acronym}
+\acrodef{DFT}{discrete Fourier transform}
+\acrodef{FFT}{fast Fourier transform}
+\acrodef{GVE}{Gauss variational equations}
+\acrodef{LARC}{Lie algebra rank condition}
+\acrodef{LMI}{linear matrix inequalities}
+\acrodef{ODE}{ordinary differential equation}
+\acrodef{SRP}{solar radiation pressure}
+\acrodef{STLC}{small-time locally controllable}
+\acrodef{PMP}{Pontryagin's maximum principle}
+\acrodef{OCP}{optimal control problem}
+
+\graphicspath{{figures/}}
+
+
+\articletype{Article Type}%
+
+\received{26 April 2016}
+\revised{6 June 2016}
+\accepted{6 June 2016}
+
+\raggedbottom
+
+
+\begin{document}
+
+\title{\bf Optimal control of a solar sail}
+
+\author[1]{Alesia Herasimenka*}
+
+\author[2]{Lamberto Dell'Elce}
+
+\author[1]{Jean-Baptiste Caillau}
+
+\author[2]{Jean-Baptiste Pomet}
+
+\authormark{HERASIMENKA \textsc{et al}}
+
+
+\address[1]{ \orgname{Université Côte d'Azur, CNRS, Inria, LJAD}, \orgaddress{\state{Nice}, \country{France}}}
+
+\address[2]{\orgname{Inria}, \orgaddress{\state{Sophia Antipolis}, \country{France}}}
+
+\corres{*\email{alesia.herasimenka@univ-cotedazur.fr}}
+
+\presentaddress{This is sample for present address text this is sample for present address text}
+
+\abstract[Summary]{Solar sails belong to controlled systems with a positivity constrained on the control, because they can not generated force toward the Sun. This constraint is even more restricted, as the resulting force is contained in some convex cone with the origin in its vertex. Consider a scenario of a solar sail orbiting around a planet or asteroid, which is wisely used for different mission like deorbiting or observation. We propose a methodology for solving optimal control problem for orbital maneuvers of the sails. Convex optimisation allows to find the admissible controls that are used as the initial guess for an optimal control problem. Pontryagin's maximum principle gives necessary conditions for  optimality. thorough analysis of the dynamics makes possible to find a switch function allowing to detect the structure of the solution for a given costate. Finally, indirect technique of multiple shooting combined with homotopy is used to solve the problem.}
+
+\keywords{solar sailing, conical constraints, sum of squares relaxation, multiple shooting,
+differential continuation}
+
+\jnlcitation{\cname{% debug
+\author{Williams K.},
+\author{B. Hoskins},
+\author{R. Lee},
+\author{G. Masato}, and
+\author{T. Woollings}} (\cyear{2016}),
+\ctitle{A regime analysis of Atlantic winter jet variability applied to evaluate HadGEM3-GC2}, \cjournal{Q.J.R. Meteorol. Soc.}, \cvol{2017;00:1--6}.}
+
+\maketitle
+
+\section{Introduction}
+
+\subsection{Solar radiation pressure} \label{ssec:force}
+Solar sails are satellittes that use \ac{SRP} as propulsion for orbital maneuvers. Caused by interaction between photons and the surface of the sail, \ac{SRP} has magnitude which depends on the distance between the Sun and  the sail, denoted by $r$. Let us denote the fixed solar flux at the Earth's distance $r_{\oplus} = 1\ \text{AU}$ by $\Phi_{SR} = 1367 \ \text{W m}^{-2}$. With $c$ the speed of light, a simple model for the \ac{SRP} is given by \cite[Chap.~3]{Montenbruck_2000}:
+\begin{equation}
+	\label{eq:pressure}
+	P_{SR} = \dfrac{\Phi_{SR}}{c} \, \left(\dfrac{r_\oplus}{r}\right)^2.
+\end{equation}
+In this paper, similarly to \cite{Herasimenka_2023}, we consider a flat sail with surface $A$ and mass $m$. Different
+optical and geometrical properties have impact on the resulting \ac{SRP} force, which has components of the incoming,
+reflected, and thermal radiations, namely $\vect{f}_a$, $\vect{f}_r$, and $\vect{f}_e$. Moreover, the reflected
+radiation has specular and diffuse contributions, $\vect{f}_{rs}$ and $\vect{f}_{ru}$, respectively. Each force
+component has different magnitude and direction, that can be identified through the Sun-sail direction, denoted as
+$\uvect{s}$ and the unit vector normal to the sail having a positive component along $\uvect{s}$, $\uvect{n}$.
+That is we assume that both sides of the sail have the same optical properties, so only the (non-oriented)
+direction of the normal to the plane representing the plane will describe its attitude.
+We also assume that it is possible to control the attitude, and the actual control will be the force
+generated by this attitude (see \eqref{eq:control_set}).
+In this model, $\uvect{n}$ belongs the projective plane $\R P^2$ that one can describe as the union of one open
+hemisphere (whose axis is $\uvect{s}$)
+with a circle whose antipodal points are identified.
+Fixing some basis ${\uvect{e_1},\uvect{e_2}}$ of
+$\{\uvect{s}\}^\perp$ in order that $(\uvect{e_1},\uvect{e_2},\uvect{s})$ defines
+a direct orthogonal frame $\mathcal{S}$,
+one defines coordinates $(\beta,\delta) \in (-\pi/2,\pi/2) \times \R$
+for $\uvect{n}$ in the open hemisphere part setting as usual (see Figure~\ref{fig:orientation})
+$$ \uvect{n} =  \sin\beta(\cos\delta\uvect{e_1}+\sin\delta\uvect{e_2})+\cos\beta\uvect{s}. $$ 
+This is not a chart\footnote{One actually retrieves the universal cover
+of the pointed open hemisphere by restricting to $(\beta,\delta)$ in $(0,\pi/2) \times \R$.}
+as no $\delta$, even restricted to $\R/\pi\Z$, can be
+uniquely associated with the direction $\uvect{s}$. (See also Remark~\ref{rem110}.)
+The angle $\beta$ is the so-called solar-sail \emph{pitch angle}.
+%
+As shown in Fig.~\ref{fig:forces},
+let us introduce the direction of specular reflection $\uvect{\xi}$, and the tangent unit vector $\uvect{t}$ lying in the plane generated by $\uvect{s}$ and $\uvect{n}$.
+%% These vectors are defined as:
+%% \begin{equation}
+%% 	\uvect{t} := \dfrac{ \uvect{n} \times \uvect{s} }{\left\| \uvect{n} \times \uvect{s} \right\|} \times \uvect{n} = \frac{\uvect{s} - \cos \beta \, \uvect{n}}{\sin \beta}.
+%% \end{equation}
+%where $\beta$ is the so-called solar-sail pitch angle defined as $\cos\beta = (\uvect{n}|\uvect{s})$.
+%% As shown in the sketch of Figure~\ref{fig:forces}
+The force due to the incoming radiation, $\vect{f}_a$, points along $\uvect{s}$. The force provided by the specularly reflected radiation, $\vect{f}_{rs}$, points along $\uvect{\xi}$ and is caused by photons that are reflected symmetrically with respect to the normal of the sail, thus yielding an exchange of momentum. Diffuse reflection stems from the sail surface roughness, which causes photons to be uniformly reflected in all directions, yielding a component of the force toward the direction normal to the sail, $\uvect{n}$. Finally, as the absorbed photons are re-radiated in all directions, the force $\vect{f}_{e}$ is generated, which is orthogonal to the sail surface and points again along $\uvect{n}$. 
+We follow \cite[Chap.~2]{McInnes_1999} and express the unit vectors $\uvect{s}$ and $\uvect{\xi}$ in terms of
+$\uvect{n}$ and $\uvect{t}$:
+\begin{equation}
+	\begin{aligned}
+		\uvect{s} &= \cos \beta \, \uvect{n} + \sin \beta \, \uvect{t},\\
+		\uvect{\xi} &= \cos \beta \, \uvect{n} - \sin \beta \,  \uvect{t},
+	\end{aligned}
+\end{equation}
+so that the above-presented forces can be expressed as~\cite{Rios_Reyes_2005}:
+\begin{equation} \label{eq:forces}
+	\begin{aligned}
+		\vect{f}_a    &= \epsilon \cos \beta \, \uvect{s} = \epsilon \, \cos \beta(\cos \beta \, \uvect{n} + \sin \beta \, \uvect{t}),\\
+		\vect{f}_{rs} &= \epsilon \rho s \cos \beta \, \uvect{\xi}= \epsilon \, \rho s\, \cos \beta ( \cos \beta\, \uvect{n} - \sin \beta\, \uvect{t}),\\
+		\vect{f}_{ru} &= \epsilon \, B_f\, \rho (1-s) \cos \beta\, \uvect{n},\\
+		\vect{f}_{e}  &= \epsilon \, (1 - \rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_b + \epsilon_f} \cos \beta \,\uvect{n}.
+	\end{aligned}
+\end{equation}
+%
+\com{AL / L: rewrite theses expressions in terms of $b_1$, $b_2$, $b_3$, and factor out $\cos\beta$}
+%
+In \eqref{eq:forces}, $\epsilon$ is equal to $A P_{SR}\, m^{-1}$,
+which combines optical and physical parameters of the sail, has small magnitude, $\rho \in [0, 1]$ is the fraction of reflected radiation to total amount of radiation illuminating the sail, $s \in [0, 1]$ the fraction of specularly reflected radiation to total reflected radiation, $\epsilon_b$ and $\epsilon_f$ are the back and front surface emissivity coefficients, respectively, and $B_b$ and $B_f$ are back and front non-Lambertian coefficients, respectively. The \ac{SRP} force is found as:
+\begin{equation} \label{eq:resultant}
+	\vect{f}_{SRP} =  \vect{f}_a + \vect{f}_{rs} + \vect{f}_{ru} + \vect{f}_e.
+\end{equation}
+%% To fully describe the orientation of the solar sail in the 3D space we introduce second angle, $\delta$, equal to an
+%% angle of the projection of  $\uvect{n}$ on the plane perpendicular to the sun line $\uvect{s}$ and the orbital plane of
+%% the solar sail. Let us denote $\mathcal{S}$ the frame attached to the solar sail and whose vectors are formed by $\uvect{s}$, and two orthogonal vectors,
+%% one lying in the orbital plane, and the other one orthogonal to it. Projection of $\uvect{n}$ and $\uvect{t}$ in  $\mathcal{S}$ are given by:
+%% %
+%% \begin{equation}
+%% 	\uvect{n} = 
+%% 	\begin{pmatrix}
+%% 	\cos \beta \\
+%% 	\sin \beta \sin \delta \\
+%% 	\sin \beta \cos \delta 
+%% 	\end{pmatrix}, 
+%% \quad \uvect{t} = 
+%% \begin{pmatrix}
+%% 	\sin \beta \\
+%% 	- \cos \beta \sin \delta \\
+%% 	- \cos \beta \cos \delta
+%% \end{pmatrix}.
+%% \end{equation}
+%% %
+In $\mathcal{S}$, the \ac{SRP} force reads (note that because of the radial
+symmetry, its norm is independent of $\delta$)
+\begin{equation}
+	\vect{f}_{SRP} = \cos\beta
+	\begin{pmatrix}
+		\cos^2 \beta (1 + \rho s) + B_f \rho (1-s) \cos \beta + (1-\rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \cos \beta + (1-\rho s)  \sin^2 \beta\\
+		2 \rho s \sin \beta \cos \beta \sin \delta + B_f \rho (1-s) \sin \beta \sin \delta + (1 - \rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \sin \beta \sin \delta \\
+		2 \rho s \sin \beta \cos \beta \cos \delta + B_f \rho (1-s) \sin \beta \cos \delta + (1 - \rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \sin \beta \cos \delta
+			\end{pmatrix}.
+\end{equation}
+
+\begin{remark} \label{rem110}
+In our modeling, the magnitude of the SRP is continuous, going to zero when the Sun direction
+is contained into the sail plane (orthogonality of $\uvect{s}$ and $\uvect{n}$),
+but its direction is not: when going through $\uvect{s} \perp \uvect{n}$, the illuminated side of the sail
+(a thickless 2D object embedded into 3D space) is changed and the orientation of $\uvect{n}$
+is changed to opposite ($\beta=\pm\pi/2$ being changed to $-\beta$, still defining the same
+direction---a perpendicular to $\uvect{s}$---in the projective plane).
+The resulting force, going to zero in such cases,
+is continuous but not smooth. This singularity is inherent to the modeling and would be removed in a more 
+realistic approach describing the sail as a genuine 3D object. This lack of smoothness
+is nonetheless not crucial here since,
+as will be clear from the optimality analysis in Section~\ref{sec2}, an optimal force will have
+discontinuities, being either zero or with $\beta \in (-\beta^*,\beta^*)$ and $0 < \beta^* < \pi/2$ (if
+we exclude the ideal case for which $\beta^*=\pi/2$).
+So flips of illuminated side will not be encountered.
+\end{remark}
+
+\com{AL: define $b_1$, $b_2$, $b_3$ as in Mengali'2005 and rewrite theses expressions in terms of $b_1$, $b_2$, $b_3$}
+
+%The first one is caused by photons that are reflected symmetrically with respect to the normal of the sail and create momentum in the opposite direction. Conversely, diffuse reflection stems from surface roughness, which causes photons to be uniformly reflected in all directions, yielding a component of the force toward the vector normal to the sail. Finally, absorbed photons are then re-radiated in all directions with energy dependent on the temperature of the sail, generating another component of the force that is orthogonal to its surface. Figure~\ref{fig:forces} shows the directions of the various components. Denoting by $\uvect{s}$ the direction of the Sun, $\uvect{n}$ the unit vector normal to the sail with positive projection toward $\uvect{s}$, \textit{i.e.}, $\cos \beta := \uvect{n} \cdot \uvect{s} \geq 0$, and
+%\begin{equation}
+%	\uvect{t} := \dfrac{ \uvect{n} \times \uvect{s} }{\left\| \uvect{n} \times \uvect{s} \right\|} \times \uvect{n} = \frac{\uvect{s} - \cos \beta \, \uvect{n}}{\sin \beta}
+%\end{equation}
+%the tangent unit vector in the plane generated by $\uvect{s}$ and $\uvect{n}$, the components of the specific force are~\cite{Rios_Reyes_2005}
+%\begin{equation} \label{eq:forces}
+%	\begin{aligned}
+	%		\vect{f}_a    &= \epsilon(r_\odot) \, \cos \beta(\cos \beta \, \uvect{n} + \sin \beta \, \uvect{t})\\
+	%		\vect{f}_{rs} &= \epsilon(r_\odot) \, \rho\, s\, \cos \beta ( \cos \beta\, \uvect{n} - \sin \beta\, \uvect{t}) \\
+	%		\vect{f}_{ru} &= \epsilon(r_\odot) \, B_f\, \rho (1-s) \cos \beta\, \uvect{n} \\
+	%		\vect{f}_{e}  &= \epsilon(r_\odot) \, (1 - \rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_b + \epsilon_f} \cos \beta \,\uvect{n}
+	%	\end{aligned}
+%\end{equation}
+%where the function $\epsilon (r_\odot) = A P_{SR} m^{-1}$ has small magnitude, $\rho \in [0, 1]$ is the portion of reflected radiation, $s \in [0, 1]$ the fraction of specular reflection, and $\epsilon_b$, $\epsilon_f$, $B_b$, $B_f$ are back and front surface emissivity and Lambertian coefficients, respectively. The resulting force is thus
+%\begin{equation} \label{eq:resultant}
+%	\vect{f}_{SRP} =  \vect{f}_a + \vect{f}_{rs} + \vect{f}_{ru} + \vect{f}_e.
+%\end{equation}
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.3\textheight}
+		\includegraphics[width = \textwidth]{path18.png}
+		\caption{Schematic representation.}
+		\label{fig:forces}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[b]{0.4\textheight}
+		\includegraphics[width = \textwidth]{orientation_3d.png}    
+		\caption{Orientation angles $\beta$ and $\delta$ of the solar sail.}
+		\label{fig:orientation}
+	\end{subfigure}
+	\caption{Components of the \ac{SRP} force and orientation of th.}
+	\label{fig:srp}
+\end{figure}
+
+\begin{figure}[t]
+	\centering
+	\begin{subfigure}[b]{0.3\textheight}
+		\includegraphics[width = \textwidth]{models_different_rho.eps}
+		\caption{Control sets for different reflectivity coefficients and $s = 1$.}
+		\label{fig:diff_rho}
+	\end{subfigure}
+	\hspace{0.5cm}
+	\begin{subfigure}[b]{0.3\textheight}
+		\includegraphics[width = \textwidth]{models_different_s.eps}    
+		\caption{Control sets for different specular reflectivity coefficients and $\rho = 0.8$}
+		\label{fig:diff_s}
+	\end{subfigure}
+%
+\centering
+\begin{subfigure}[b]{0.3\textheight}
+	\includegraphics[width = \textwidth]{models_different_eps.eps}
+	\caption{Control sets for different front emissivity coeffucuents. }
+	\label{fig:diff_eps}
+\end{subfigure}
+\hspace{0.5cm}
+\begin{subfigure}[b]{0.3\textheight}
+	\includegraphics[width = \textwidth]{models_different_B.eps}    
+	\caption{Control sets for different front non-Lambertian coeffucuentsl.}
+	\label{fig:diff_B}
+\end{subfigure}
+%	\includegraphics[width = 0.3\textwidth]{diff_rho_blue_X_Y_Z.eps}    
+%	\caption{Control sets for different reflectivity coefficients and $s = 1$. Here, $u_X$ is the projection
+%		of $\vect{u}$ towards $\uvect{s}$, while $u_Y$ and $u_Z$ are orthogonal components.}
+	\label{fig:diff_optical_prop}
+\end{figure}
+
+\subsection{Parametrisation of the control set}
+Controlling the sail attitude, \textit{i.e.} the normal vector $\uvect{n}$, allows to change the direction and magnitude of the resulting \ac{SRP}. A reliable inference of optical coefficients is indeed mandatory to accurately estimate the mapping between $\uvect{n}$ and $\vect{f}_{SRP}$.
+%
+To carry out our analysis, solar sail dynamics is conveniently modeled as a nonlinear control-affine system
+(see Section~\ref{ssec:eom}), where the control variable is homogeneous to the force vector: $\vect{u} :=
+\vect{f}_{SRP}/\epsilon$. The control set ${U} \subset \mathbf{R}^3$ is then given by:
+\begin{equation}
+	%{U} = \left\{ \dfrac{\vect{f}_{SRP}(\uvect{n})}{\epsilon (r_\odot)}, \ \forall \ \uvect{n} \in \partial B^3 \right\}
+	{U} = \left\{ \vect{u} = \dfrac{\vect{f}_{SRP}(\uvect{n})}{\epsilon} , \ \uvect{n} \,\in \R P^2 \right\}.
+	\label{eq:control_set}
+\end{equation}
+As for the normal vector $\uvect{n}$, we use spherical coordinates $(\beta,\delta)$ as a set of
+local coordinates to parametrise the control set.
+%
+Figure~\ref{fig:diff_optical_pro} shows the intersection of ${U}$ on the plane generated by $\uvect{n}$ and $\uvect{s}$
+for various optical properties. The set is a surface of revolution with axis $\uvect{s}$, and it is not convex unless
+$\rho = s = 1$. Note that the interior of the surface is not part of ${U}$. When re-emitted radiation is neglected,
+which is most often a reasonable assumption for control purposes, ${U}$ contains the origin but mapping between
+$\uvect{n}$ and $\vect{u}$ is non-smooth at this point. Two extreme cases can be identified: ideal sails are constituted
+by perfectly-reflective surfaces ($\rho = s = 1$), whereas perfectly absorptive surfaces are the worst-case scenario
+($\rho = 0$, $\vect{f}_e$ neglected) because \ac{SRP} is systematically parallel to $\uvect{s}$.  Although sails are
+designed to be as close to ideal as possible, partial absorption of the energy is unavoidable in real-life applications and, in addition, optical properties exhibit degradation with time. Hence, the fraction of reflected radiation decreases with lifetime of the satellite, as discussed in \cite{dachwald_impact_2007, Niccolai_2022}.
+
+\com{AL: Comments here + figures about convexity/non-convexity of the control set:
+horizontal or vertical tangent}
+
+\subsection{Equations of motion}
+\label{ssec:eom}
+The following assumptions are introduced:
+\begin{enumerate}
+	\item Orbital period of the sail is much smaller than the one of the heliocentric orbit of the attractor, so that variations of the Sun direction $\uvect{s}$ over a single orbit of the sail are neglected.
+	%<<<<<<<
+	%	\item Solar eclipses are neglected. Targeting a certify of non-controllability% in Section~\ref{sec:necessary}
+	%	, this assumption is conservative, and it yields results that are independent of the semi-major axis of the orbit.
+	%	\item Re-emitted radiation is neglected. In fact, this component of \ac{SRP} is most often regarded as a disturbance for control purposes.
+	%=======
+	\item Solar eclipses are neglected. Introducing solar eclipses can be a way of improving the proposed algorithm.
+	\item Re-emitted radiation is neglected. In fact, this component of \ac{SRP} can be reasonably regarded as a disturbance for control purposes.
+	
+\end{enumerate}
+%
+Equations of motion are written in a set of Keplerian-like orbital elements, which leverages on the axial symmetry of
+the problem with respect to the Sun's direction. Namely, consider a reference frame $\mathcal{S}$ with origin at the center of
+the planet, $\uvect{X}$ axis towards $\uvect{s}$, $\uvect{Y}$ lies in the plane of the planet's orbit around the Sun and
+is orthogonal to $\uvect{X}$, and $\uvect{Z}$ is chosen to form a right-hand frame. Because this study focuses on
+short-time controllability (characteristic time is of the order of one orbital period), motion of this frame is
+neglected by virtue of the first assumption above. Figure~\ref{fig:orbit} represents the vectors $\vect{h}$, $\vect{e}$
+and $\uvect{N}$ , which denote the angular momentum, eccentricity and ascending node vectors, respectively. Let
+$\gamma_1$, $\gamma_2$, $\gamma_3$ be Euler angles orienting the eccentricity vector according to a $X$-$Y$-$X$ rotation
+as depicted in Fig.~\ref{fig:orbit}, so that $\gamma_2$ is the angle between the angular momentum of the orbit and the
+Sun direction, and $a$, $e$, and $f$ be semi-major axis, eccentricity and true anomaly, respectively. The motion of slow
+elements, $I = \left( \gamma_1, \gamma_2, \gamma_3, a, e \right)^T \in \mathcal{M}$, where $\mathcal{M}$ is the
+configuration manifold, and fast angle $f$ is governed by
+\begin{figure}
+	\centering
+	\includegraphics[width=0.4\textwidth]{orbit.png}
+	\caption{Euler angles $\gamma_i$ orienting the orbit according to a $\uvect{X}$-$\uvect{Y}$-$\uvect{X}$ rotation  with respect to the reference frame $\mathcal{S}$. Here, $\vect{h}$ and $\vect{e}$ denote the angular momentum and eccentricity vectors.}
+	\label{fig:orbit}
+\end{figure}
+\begin{equation}
+	\label{eq:syst_gve}
+	\begin{aligned}
+		& \dt{I} = \epsilon  \, \sqrt{\dfrac{a \left( 1 - e^2 \right)}{\mu}} G_0(I, f) \, R(I, f) \, \vect{u},\\
+		& \dt{f} = \omega(I, f) +   \epsilon \, F (I, f) \, R(I, f) \, \vect{u},
+	\end{aligned} %\right.
+\end{equation}
+where components of $\vect{u}$ are in the reference frame $\mathcal{S}$, $R(I, f) = R_X(\gamma_3 + f) R_Y(\gamma_2) R_X(\gamma_1)$ is the rotation matrix from reference to local-vertical local-horizontal frames\footnote{Here, $R_A(f)$ denotes the rotation matrix of angle $f$ about the axis $\uvect{A}$.}, 
+%
+\begin{equation}
+	\omega(I, f) = \sqrt{\dfrac{\mu}{a \, (1 - e^2)^3}} (1 + e \cos f)^2.
+\end{equation}
+%
+Both $F(I, f)$ and $G_0(I, f)$ can be deduced from \ac{GVE} of classical elements, where
+\begin{equation}
+	G_0(I,f) = 
+	\begin{pmatrix}
+		0 & 0 & \dfrac{\sin \left( \gamma_3 + f \right)}{\sin \gamma_2 (1 + e \cos f)} \\
+		0 & 0 & \dfrac{\cos \left( \gamma_3 + f \right)}{1 + e \cos f} \\
+		- \dfrac{\cos f}{e} & \dfrac{2 + e \cos f}{1 + e \cos f} \dfrac{\sin f}{e}  & \dfrac{\cos \left( \gamma_3 + f \right)}{1 + e \cos f} \\
+		\dfrac{2 \,a \, e}{ 1 - e^2} \sin f & \dfrac{2\, a \, e}{ 1 - e^2} \left( 1 + e \cos f \right) & 0\\
+		\sin f & \dfrac{e \cos^2 f + 2 \cos f + e}{1 + e \cos f}  & 0
+	\end{pmatrix}.
+\end{equation}
+%
+This peculiar choice of Euler angles follows from the symmetry of System~(2), namely axial symmetry with respect to the axis $\boldsymbol{\hat{X}}$, and it has the main
+consequence that controllability results in Section~V are independent of $\gamma_1$, which is a rotation about this axis.
+% We also note that $\left( 1+e \cos f \right) G(I, f) R(I, f)$ is a trigonometric polynomial in $f$ because eclipses were neglected. % useless here (no Fourier series to compute)
+
+%\com{AL: provide explicit expressions for $F$, $R_X$ and $R_Y$}
+
+\section{Control over one orbital period} \label{sec2}
+%% *** Text below to be replaced by an updated introduction
+%% We are interested in proposing an optimal control law allowing to realize any desired maneuver.
+%% The considered scenario is the sail orbiting around a planet or an asteroid.
+%% The proposed methodology might have multiple applications, including finding
+%% the control required to cancel various perturbations for station-keeping.
+%% %
+%% Consider again System~\eqref{eq:syst_gve}. We want to propose an optimal strategy allowing to change the orbit of the solar sail according to the requirement. Changing orbit means moving the slow orbital parameters according to the given direction $d_I$, while maximizing the maneuver displacement after one orbital period.
+%% %
+%% We first investigate find necessary conditions for optimality given by \ac{PMP}.
+%% Then we formulate the optimal control problem.
+%% The dynamics of the problem allows us to find a switching function whose roots indicate structure of the
+%% solution for a given initial costate. An initial guess is obtained via convex optimization by limiting the
+%% control set by a bounded cone, and multiple shooting algorithm relying on a callback procedure to accomodate
+%% for a change of structure is proposed. This , differential continuation method is used to find solution on the real control set from an approximated bounded convex cone.
+
+\subsection{Optimal control formulation}
+We are interested in moving solar sail in the desired direction after one orbital period. Therefore, it is interesting
+to rewrite System~\eqref{eq:syst_gve} in terms of displacement of the slow state elements,
+denoted $\delta I$. Therefore, its dynamics is given by 
+%
+\begin{equation}
+	\label{eq:deltaI_notslow}
+	\delta I'= \veps G(I,f) u
+\end{equation}
+where $' := \textrm{d}/{\textrm{d}f}$ and with
+$$ G(I,f) := \dfrac{a \left( 1 - e^2 \right)^2}{\mu(1+e\cos f)^3} G_0(I,f)R(I,f). $$
+%
+As mentioned earlier, \ac{SRP}
+has a very small magnitude, this is why it is usually considered as a perturbation. Thus, changes on slow
+variables are very small over one orbital period so that $I$ will be assumed \emph{constant} in the rest
+of the paper.
+%Given the fast-oscillating character of the true anomaly, we neglect the perturbation terms that have $\epsilon$-magnitude. 
+%
+The goal is to maximise the size of the displacement in a given direction fixed by a unit vector,
+$d_I$, so that the final
+value of $\delta I$ is parallel to $d_I$. This problem can be
+written in Mayer form as follows (note the simple form of the dynamics,
+given by an explicit integral, as the right-hand side does not depend on $\delta I$ in our
+approximation):
+%
+\begin{equation}
+	\label{eq:opt_cntr_pb_init}
+		\max_{u(f) \, \in \, U} \,  (\delta I(2\pi)|d_I) \quad \textrm{subject to}  \quad
+		\delta I' = \veps \sum_{i=1}^{3} u_i G_i (I,f),\quad
+		\delta I (0) = 0, \quad \delta I (2 \pi) \text{ parallel to } d_I.
+\end{equation}
+Building upon results in \cite{herasimenka:hal-03185532, control2022},
+we have access to an effective test (related to the
+convex SDP approximation discussed in Section~\ref{sec3}) to check that it is indeed possible to move 
+in the direction $d_I$ after one revolution. So we assume in the sequel that the problem is controllable. 
+
+\subsection{Existence and necessary conditions for optimality}
+\label{ssec:hamiltonian_descr}
+We first consider the relaxation of \eqref{eq:opt_cntr_pb_init} obtained by replacing the control set $U$ by its
+convex hull: $u(f) \in \conv(U)$ (see Figure~\ref{XXXX}).
+%% \begin{equation} \label{ocp_conv}
+%% 		\max_{u(f) \, \in \, \conv(U)} \, (\delta I(2\pi)|d_I) \quad \textrm{subject to} \quad
+%% 		\delta I' = \veps \sum_{i=1}^{3} u_i G_i (\mybar{I}, f),\quad \delta I(0)=0,\quad
+%% 		\delta I(2\pi) \text{ parallel to } d_I, 
+%% \end{equation}
+As the control set is now compact and convex, and since we have assumed controllability using controls
+valued in $U \subset \conv(U)$, Filippov theorem entails that
+
+\begin{proposition} \label{prop100}
+The relaxed problem has a solution.
+\end{proposition}
+
+\noindent To formulate the necessary optimality conditions for the problem on $\conv(U)$
+we introduce the costate $p_{\delta I}$ of $\delta I$, a covector of dimension $5$.
+The Hamiltonian associated with the dynamics is
+%
+\begin{equation}
+	\label{eq:hamiltonian}
+	H(I, f, p_{\delta I}, u) = \veps p_{\delta I} G(I,f)u.
+\end{equation}
+%
+Remember that $I$ is a constant, and note that the Hamiltonian does not depend on the state $\delta I$
+because of the very simple form of the dynamics. (The ODE defines a mere quadrature, here.)
+Clearly, $p_{\delta I}$ is constant and
+transversality conditions write
+\begin{equation} \label{eq113}
+  (p_{\delta I} | d_I ) = -p^0 \|d_I\|^2 = -p^0
+\end{equation}
+where $p^0$ is the nonpositive multiplier associated with the cost. In particular, $p_{\delta I}$
+is not zero, since otherwise both $p^0$ and $p_{\delta I}$ would vanish.
+By homogeneity in $(p^0,p_{\delta I})$
+there are two cases: (i) the abnormal case ($p^0=0$) when $(p_{\delta I} | d_I) = 0$ and where
+one can normalise setting $\|p_{\delta I}\| = 1$; (ii) the normal case ($p^0<0$) when
+$(p_{\delta I} | d_I) > 0$ and where one can normalise setting 
+$(p_{\delta I} | d_I) = 1$. Let us set $\psi := p_{\delta I} G(I,f)$.
+
+\begin{lemma} For any $I$, the matrix formed by $G(I,f)$ and $\partial G(I,f)/\partial f$
+has maximum rank for all $f \in [0,2\pi]$.
+\end{lemma}
+
+\begin{proof} This computation is actually equivalent to the rank condition that can be verified
+in terms of Lie brackets (and, \emph{e.g.}, Cartesian coordinates) in \cite{caillau-2012a}
+(check Lemma~1).
+\end{proof}
+
+\noindent As a result, the zeros of the dimension three covector $\psi$ (as a function of the
+true anomaly $f$) are isolated on $[0,2\pi]$. Indeed, the previous lemma implies that
+$\psi$ and $\mathrm{d}\psi/\mathrm{d}f$ cannot vanish simultaneously as then, $p_{\delta I}$
+would be orthogonal to all columns of $G(I,f)$ and of
+its derivative, so $p_{\delta I}$ would be zero
+(a contradiction). So there are only finitely many such zeros on $[0,2\pi]$, defining a locus
+of codimension greater than one in the $(I,f)$ space.  
+For the sake of simplicity, we assume in the sequel that $\psi$ actually
+never vanishes. For a detailed discussion on the associated singularities of the dynamics, see
+\cite{caillau-2022a}. 
+
+Let $K_{\alpha}$ be the convex cone generated both by $U$ and by its convex hull, $\alpha$
+denoting the half-angle at the cone vertex. The polar cone $K_\alpha^0$ is the set of directions
+having a nonpositive scalar product with those in $K_\alpha$.
+The drop-shaped curve obtained when intersecting the
+control set with a plane is parametrised by the angle $\beta$ alone,
+and we denote $\beta^* \in (0,\pi/2)$ the parameter associated with the tangency point of this
+curve with its conical hull (see Figure~\ref{XXXX}). In the sequel, we recall and complete the analysis
+from \cite{mengali-2005a}, providing precise bounds on the number of switchings on the control. 
+
+\begin{lemma} \cite{mengali-2005a}
+The angle $\beta^*$ is solution of
+$$ \cos\beta^* = \frac{ -b_1b_3 -2b_2b_3 + \sqrt{b_1^2b_3^2 - 4b_1b_2b_3^2 + 8b_1^2b_2^2 + 4b_1b_2^3}}%
+ {4b_1b_2 + 2b_2^2}\cdot $$
+\end{lemma}
+
+\begin{proposition} \label{prop101} \cite{mengali-2005a}
+An optimal control $u$ verifies the following:
+(i) when $\psi$ belongs to the interior of $K_\alpha^0$, $u$ is zero;
+(ii) when $\psi$ does not belong to $K_\alpha^0$, the coordinates $(\beta,\delta)$ of
+the control verify the following relations:
+\begin{equation} \label{eq104}
+  \psi_1\sin\beta(b_1 + 3b_2\cos^2\beta + 2b_3\cos\beta)
+ - \sqrt{\psi_2^2+\psi_3^2} \left( \cos^2\beta(b_2\cos\beta + b_3)
+ - \sin^2\beta(2b_2\cos\beta + b_3) \right), \ \beta \in (-\beta^*,\beta^*),
+\end{equation}
+and
+\begin{equation} \label{eq105}
+  \delta = \pi/2 - \arg(\psi_2+i\psi_3) \text{ mod } \pi.
+\end{equation}
+%
+Moreover, any optimal control is made of finitely many subarcs corresponding to case (i) or (ii),
+and has at most $8$ switchings (transverse contacts with $\partial K_\alpha^0$)
+over one period. 
+\end{proposition}
+
+\begin{proof}
+According to Pontrjagin maximum principle and to the expression \eqref{eq100} of the Hamiltonian,
+for almost all true anomaly $f$ an optimal control must be a maximizer of the scalar product
+$(\psi|u)$
+for $u$ in $\conv(U)$. Clearly, when $\psi$ belongs to the interior of the polar cone of $K_\alpha$,
+this scalar product is negative for any nonzero $u$, so $u=0$ is the only maximizer.
+Conversely, when $\psi$ belong to the open complement of $K_\alpha^0$, maximizers must annihilate the
+gradient of the Hamiltonian with respect to the chosen coordinates of the control,
+$$ \frac{\partial H}{\partial\beta} = 0,\quad \frac{\partial H}{\partial\delta} = 0, $$
+which gives the expressions in alternative (ii) of the statement. Moreover, $\psi$ belongs to the boundary
+of $K_\alpha^0$ if and only if
+$\psi_1\cos\alpha + \sqrt{\psi_2^2+\psi_3^2}\,\sin\alpha = 0$,
+implying that
+\begin{equation} \label{eq103}
+  \psi_1^2\cos^2\alpha - (\psi_2^2+\psi_3^2)\sin^2\alpha = 0.
+\end{equation}
+Every component of $\psi$ is trigonometric in $f$, and this (nontrivial) equation results in a
+trigonometric polynomial of degree $4$. As it has isolated zeros, there are finitely many zeros (at most
+eight, see Remark~\ref{rem1}) defining isolated contacts with $\partial K_\alpha^0$.
+\end{proof}
+
+%% According to \ac{PMP}, the control (orientation of the sail) should be chosen to maximize the scalar product $p (\mybar{I}, f) \cdot  \vect{f}_{SRP}$. Therefore, two different cases depending on the relative position of $p(\mybar{I}, f)$ and the polar cone $K^0_{\alpha}$ exist, as shown in Fig.~\ref{fig:polar_cone}. First, when $p(\mybar{I}, f) \in K^0_{\alpha}$, then $u=0$, as for every other value of the control the scalar product $p (\mybar{I}, f) \cdot  \vect{f}_{SRP}$ is negative. Second, if $p(\mybar{I}, f) \notin K^0_{\alpha}$, $u^*$ exists verifying Eq.~\eqref{eq:u*}.
+%% 
+%% \begin{equation}
+%% 	\label{eq:Ham_force_max}
+%% 	\begin{aligned}
+%% 	H = p (\mybar{I}, f) \cdot  \vect{f}_{SRP} =  \ &p_1(\cos^3 \beta (1 + \rho s) + B_f \rho (1-s) \cos^2 \beta + (1-\rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \cos^2 \beta + (1-\rho s)  \sin^2 \beta \cos \beta ) \,+ \\
+%% 	&p_2 (2 \rho s \sin \beta \cos^2 \beta \sin \delta + B_f \rho (1-s) \sin \beta \cos \beta \sin \delta + (1- \rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \sin \beta \cos \beta \sin \delta ) \, + \\
+%% 	&p_3 (2 \rho s \sin \beta \cos^2 \beta \cos \delta + B_f \rho (1-s) \sin \beta \cos \beta \cos \delta + ( 1 - \rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \sin \beta \cos \beta \cos \delta)
+%% 	\end{aligned}
+%% \end{equation}
+%% 
+%% According to \ac{PMP} and after some simplifications we obtain:
+%% 
+%% \begin{equation}
+%% 	\begin{aligned}
+%% 		\dfrac{\partial H}{\partial \delta} = 0 \quad  \iff \quad & p_2 \cos \delta = p_3 \sin \delta \\
+%% 			& \delta = \arctan \left( \dfrac{p_2}{p_3} \right)
+%% 	\end{aligned}
+%% 	\label{eq:PMP_delta}
+%% \end{equation}
+%% 
+%% In other terms, the clock angle $\delta$ is chosen such that $ \vect{f}_{SRP}$ lies in the plane generated by $p (\mybar{I}, f)$ and $\uvect{s}$. Let us introduce $\theta$ as angle between $p$ and $\uvect{s}$. 
+%% 
+%% \begin{figure}[t]
+%% 	\centering
+%% 	%	\begin{subfigure}[t]{0.4\textwidth}
+%% 		%	\centering
+%% 		\includegraphics[width=0.5\textwidth]{polar_cone.png}
+%% 		\caption{Geometrical illustration of \ac{PMP}: if $p (\mybar{I}, f) \in K^0_{\alpha}$, $u=0$; if $p (\mybar{I}, f) \notin K^0_{\alpha}$, $u^* =  \arg \max_{\beta, \delta} \vect{f}_{SRP} \, \bar{p}_{\delta I}  G(\mybar{I}, f)$.}
+%% 		\label{fig:polar_cone}
+%% 		%	\end{subfigure}
+%% 	%	\hspace{1cm}
+%% 	%	\begin{subfigure}[t]{0.4\textwidth}
+%% 		%	\centering
+%% 		%\includegraphics[width=0.5\textwidth]{best_controls_cone.png}
+%% 		%\caption{The optimal solution will be given by two controls on the boundary of the cone and a zero control.}
+%% 		%\label{fig:best_controls_cone}
+%% 		%	\end{subfigure}
+%% \end{figure}
+%% 
+%% \begin{equation}
+%% \begin{aligned}
+%% 		& \dfrac{\partial H}{\partial \beta} = 0 \  \iff \  
+%% 		\dfrac{\sqrt{p_2^2 + p_3^2}}{p_1} = 
+%% 		\dfrac{\rho s \cos \beta + 3 \rho s \cos3 \beta + 2 B_f \rho (1-s) \cos 2\beta + 2 (1-\rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \cos 2\beta }{2 \sin \beta + \rho s \sin \beta + 3 \rho s \sin 3 \beta + 2 B_f \rho (1-s) \sin 2\beta + 2 (1-\rho) \frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \sin 2\beta} \\
+%% 		 & \iff \  \tan \theta =
+%% 		  \dfrac{\sin \beta \left( (1 - \rho s) + 6 \rho s \cos^2 \beta + 2 \left( B_f \rho (1-s) + (1 - \rho )\frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \right) \cos \beta \right) }{\cos^2 \beta \left( 2 \rho s \cos \beta + B_f \rho (1-s) + (1 - \rho )\frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} \right) - \sin^2 \beta \left(B_f \rho (1-s) + (1 - \rho )\frac{\epsilon_f B_f - \epsilon_b B_b}{\epsilon_f + \epsilon_b} + 4 \rho s \cos \beta\right)}
+%% 	 \end{aligned}
+%% \label{eq:PMP_beta}
+%% \end{equation}
+%% 
+%% Switches between bangs (and so zeros for the optimal control) occur 
+%% when $p(\mybar{I},f) \perp K_{\alpha}$ or $p(\mybar{I}, f) \in \partial K^0_{\alpha}$. 
+%% This condition can be rewritten in terms of angles:
+%% 
+%% \begin{equation}
+%% 	\begin{aligned}
+%% 	p(\mybar{I},f) \in \partial K_{\alpha}^0 \ \iff \  &\tan \theta =  \tan(\alpha + \frac{\pi}{2}) = -\kappa \\
+%% 	 & \dfrac{ \sqrt{ p_2^2 + p_3^2}}{p_1 }= - \kappa \\
+%% 	 & p_1^2 - \kappa ^2 (p_2^2 + p_3^2) = 0
+%% 	\end{aligned}
+%% \label{eq:switch_when}
+%% \end{equation}
+%% 
+%% with $\kappa\geq0$ constant. One must note that $p_1 < 0$, since $\alpha > 0$. Otherwise, Eq.~\eqref{eq:switch_when} does not hold. Since $p$ is trigonometric in $f$, Eq.~\eqref{eq:switch_when} is an exact trigonometric polynomial of degree 4. Therefore, it has a defined number of roots, which is less or equal to 8.
+%% \end{proof}
+
+\begin{remark} \label{rem1}
+Roots of a trigonometric polynomial can be found using companion-matrix methods \cite{boyd_computing_2007}. Consider the degree $4$ polynomial
+$$
+\mathcal{T} (f) = \sum_{j=0}^4 a_j \cos(jf) + \sum_{j=1}^4 b_j \sin(jf).
+$$
+Fourier-Frobenius companion matrix elements are 
+%
+\begin{equation}
+	\label{eq:Frobenius_def}
+	B_{jk} =
+	\left \{
+	\begin{array}{r@{\quad \quad}l}
+	\delta_{j, k-1}, & j=1,\ldots,7, \ k = 1, \ldots, 8, \\
+	\displaystyle (-1)\frac{h_{k-1}}{a_4 - i b_4}\,, & j = 8, \ k = 1, \ldots, 8,
+	\end{array}
+	\right.	
+\end{equation}
+where $\delta_{jk}$ are the Kronecker functions such that $\delta_{jk} = 0$ if $j \neq k$ and $\delta_{jj} = 1$, and $h_k$ are 
+%
+\begin{equation}
+	h_k = 
+	\left \{
+		\begin{array}{r@{\quad \quad}l}
+			a_{4-k} + i b_{4-k}, & k = 0,\ldots,3, \\
+			2 a_0, & k = 4, \\
+			a_{k-4} - i b_{k-4}, & k = 5, \ldots,8.
+	\end{array}
+	\right.	
+\end{equation}
+%
+The roots of $\mathcal{T}(f)$ are obtained from eigenvalues $z_k$ of the matrix defined in Eq.~\eqref{eq:Frobenius_def}
+as
+$$ f_{k,m} = arg(z_k) - i \log(|z_k|) \text{ mod } (2\pi), \quad k= 1,\ldots,8. $$
+Real-valued roots of $\mathcal{T}(f)$ are such that $|z_k|=1$. Therefore, this technique allows to find roots
+of the switch function and, thus, find out the structure of the solution for a given costate.
+It is important to stress that the trigonometric polynomial is of degree $4$,
+which means that the switching function can have at most $8$ roots.
+%In other words, there can be maximum 5 controlled arcs over one orbital period.
+\end{remark}
+
+\begin{corollary} \label{cor110}
+The original optimal control problem \eqref{eq:opt_cntr_pb_init} has a solution.
+\end{corollary}
+
+\begin{proof} The relaxed problem has at least one solution (Proposition~\ref{prop100}),
+and any control solution actually belongs to $U$ by virtue of Proposition~\ref{prop101}. Such controls
+must be optimal for the original problem, whence existence.
+\end{proof}
+
+\section{Solution using convex optimisation and continuation} \label{sec3}
+
+\subsection{Convex approximation for a reliable initial guess} % reliable = convergence is ensured
+\label{sec:convex_pb_initial_guess}
+In order to use indirect shooting methods for solving optimal control problem, we need first a
+reliable initial guess for the costate $p_{\delta I}$.
+We propose an approximation by a convex mathematical program similar to the one used in
+\cite{herasimenka:hal-03185532} for controllability check purposes.
+To this end, define the bounded cone $\hat{K}_{\alpha}$ obtained by truncating the $K_\alpha$ at its 
+tangency points with $U$ (check Figure~\ref{fig:bounded_cone}). This cone is bounded by a disk denoted
+$D_\alpha$. This new control set is a subset of the convex hull of $U$, in order that any solution of 
+\begin{equation}
+	\label{eq:opti_pb}
+	\max_{u(f) \, \in \, \hat{K}_{\alpha}} \, (\delta I(2\pi)|d_I) \quad \textrm{subject to} \quad
+	\delta I' = \veps \sum_{i=1}^3 u_i G_i (\mybar{I}, f),\quad \delta I(0)=0,\quad \delta I(2\pi)
+	\text{ parallel to } d_I,
+\end{equation}
+will define an admissible control for the convex relaxation of the original control problem.
+% \eqref{eq:opt_cntr_pb_init}. % debug: needs
+% to be proved by applying PMP on bounded cone (actually check what's written hereafter)
+Note that existence holds for this new problem (Filippov again, as $\hat{K}_\alpha$ is convex and bounded)
+and that any solution will also have a bang-bang structure. A similar analysis to the one of
+Section~\ref{ssec:hamiltonian_descr} on $\conv(U)$ indeed allows to prove that
+
+\begin{proposition} \label{prop102}
+An optimal control $u$ of problem \eqref{eq:opti_pb} on $\hat{K}_\alpha$ verifies the following:
+(i) when $\psi$ belongs to the interior of $K_\alpha^0$, $u$ is zero;
+when $\psi$ does not belong to $K_\alpha^0$, (ii-a) the control is uniquely determined and belongs to
+the circle $\partial D_\alpha$, unless (ii-b) $\psi$ is colinear to the axis $\hat{s}$ of
+the cone $K_\alpha$ in which case the control still belongs to the $\partial D_\alpha$ but
+is not uniquely determined.
+Moreover, any optimal control is made of finitely many subarcs corresponding to case (i) or (ii-a)
+over one period. 
+\end{proposition}
+
+\begin{proof} As $\hat{K}_\alpha$ and $K_\alpha$ have the same polar cone, (i) is clear. Conversely, when
+$\psi$ belongs to the open complement of $K^0_\alpha$, the colinearity condition $\psi \wedge \hat{s}=0$
+boils down to checking a polynomial condition in $f$ and has only isolated zeros corresponding to case (ii-b).
+When $\psi$ is not colinear to $\hat{s}$,
+the unique maximizer of $(\psi|u)$ for $u$ in $\hat{K}_\alpha$ indeed belongs
+to the circle $\partial D_\alpha$, which is case (ii-a).
+\end{proof}
+
+\noindent This structure being analogous to that of solutions of the original 
+problem, one hopes to retrieve a reasonable approximation to be used to initiate a differential continuation
+(see Section~\ref{ssec:homotopy}). In particular, we note that the original problem \eqref{eq:opt_cntr_pb_init}
+on $U$ and problem \eqref{eq:opti_pb} on $\hat{K}_\alpha$ share the same switching function associated with
+contacts with $\partial K^0_\alpha$ and given by \eqref{eq103}.
+
+%% Using this approximation enables to have a first intuition on the solution of the problem~\eqref{eq:opt_cntr_pb}. The delicate choice of cone approximation allows to find the admissible non-optimal controls. According to \ac{PMP} only two possible controls can be solutions to maximize \eqref{eq:hamiltonian}, as shown in Fig.~\ref{fig:best_controls_cone}: either a 0 or a control on the circle containing tangency points, which is an admissible control for the real system, but not necessary optimal. Thus, the solution of the convex optimisation problem will have a shape of a classical bang-bang control.
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[t]{0.3\textwidth}
+		\centering
+		\includegraphics[height = 2 cm]{bounded_cone.png}
+		\caption{Approximation of the control set by a cone bounded at the points of tangency.}
+		\label{fig:bounded_cone}
+	\end{subfigure}
+	\hspace{0.5cm}
+	\begin{subfigure}[t]{0.3\textwidth}
+		\centering
+		\includegraphics[height = 1.9 cm]{best_controls_cone.png}
+		\caption{Optimal solution will be given by two controls on the boundary of the cone or a zero.}
+		\label{fig:best_controls_cone}
+	\end{subfigure}
+	\hspace{0.5cm}
+	\begin{subfigure}[t]{0.3\textwidth}
+		\includegraphics[height = 2 cm]{best_controls_drop}
+		\caption{Possible optimal solutions on the real control set.}
+		\label{fig:best_controls_drop}
+	\end{subfigure}
+	\caption{Approximation of the control set by a convex cone.}
+\end{figure}
+
+%% Once we have the initial guess, different strategies might be adopted to solve the initial problem with a drop-like control set, such as multiple shooting or continuous differentiation. An important observation made after solving the initial problem using multiple shooting method is a possible change of structure between the solutions obtained for a bounded convex cone and the real control set. Indeed, by replacing the bounded cone with a real drop-like set, we "inflate" the set on the right side. The optimal solutions will be either situated on the "inflated" part of the control set or zero, as shown in Fig.~\ref{fig:best_controls_drop}. Therefore, change of structure (\textit{e.g.} change of number of bangs) can occur.
+
+%% A reliable initial guess can be obtained by solving a convex optimisation problem. 
+%% First, let us consider motion of $(I, M)$ given by Eq.~\eqref{eq:syst_gve} and~\eqref{eq:syst_gve_M}. Since we want to verify if a sail can move in the neighborhood of the initial orbit given by $I$, we neglect $\epsilon$-terms of the equation of $M$:
+%% \begin{equation}
+%% 	\dt{M} = \varpi(\mybar{I})
+%% \end{equation}
+%% Change of variables allows to rewrite the system as:
+%% \begin{equation}
+%% 	\dfrac{\textrm{{d}} I}{\textrm{d} M} = \dfrac{1}{\varpi(\mybar{I})} \dt{I} = \dfrac{\epsilon}{\varpi(\mybar{I})} \sum_{i} u_i G_i(\mybar{I}, f)
+%% \end{equation}
+%% Considering dynamics of $\delta I$, we can rewrite:
+%% \begin{equation}
+%% 	\dfrac{\textrm{d} \delta I}{\textrm{d} M} = \dfrac{\epsilon}{\varpi(\mybar{I})} \sum_{i} u_i G_i(\mybar{I}, f)
+%% \end{equation}
+%% Consider a given desired direction of the displacement $d_I \in T_I M$, a convex control problem with state $\delta I$ valued in $T_I M$
+%% 
+%% \begin{equation}
+%% 	\label{eq:opti_pb}
+%% 	\begin{aligned}
+%% 	\max_{u(f) \, \in \, \hat{K}_{\alpha}} \, (\delta I|d_I) \quad \textrm{subject to}  \quad  & \delta I (2 \pi) = \dfrac{\epsilon}{n}  \int_{0}^{2 \pi} \sum_{i=1}^3 u_i G_i (\mybar{I}, f)  \, \mathrm{d}f\\
+%% 	& \delta I (0) = 0, \quad \delta I (2 \pi) \text{ parallel to } d_I\\
+%% \end{aligned}
+%% \end{equation}
+%% %
+%% is feasible if the system is locally controllable over one orbital period. 
+
+Consider the following %conservative
+discretization of \eqref{eq:opti_pb}: the control set $\hat{K}_{\alpha}$
+is approximated by a polyhedral cone $\hat{K}^g_\alpha \subset \hat{K}_{\alpha}$
+generated as the convex hull of $g$ vertices $V_1, \ldots, V_g$ chosen in $\partial \hat{K}_{\alpha}$.
+(Note that the 3D cone $\hat{K}_\alpha$ is not finitely generated.)
+Any control in $\hat{K}^g_\alpha$ is given by a convex combination
+\begin{equation} \label{eq:u_trigo}
+	u(f) = \sum_{j = 1}^{g} \nu_j(f) V_j, \quad
+	\nu_j(f) \geq 0,\quad \sum_{j=1}^g  \nu_j(f)=1,\quad f \in \mathbf{S}^1,\quad j = 1,\ldots,g.
+\end{equation}	
+The functions $\nu_j$ are modeled using an $N$-dimensional basis of trigonometric polynomials, $\Phi(f) = \left(1, e^{i f}, e^{2 i f} , \ldots , e^{(N - 1) i f} \right)$:
+\begin{equation}
+	\label{eq:uj_nesterov}
+	\nu_j(f) = \left( \Phi(f) \ |  \ c_j \right) _H 
+\end{equation}
+with $c_j \in \mathbf{C}^N$ complex-valued coordinates of $\nu_j$ in $\Phi(f)$, and $\left( \cdot | \cdot \right)_H$ stands for the Hermitian product on $\mathbf{C}^N$. To enforce the positivity constraint, we leverage on the formalism of squared functional systems outlined in~\cite{Nesterov_2000}. It allows to recast continuous positivity constraints into \ac{LMI}, that can be solved using convex optimisation.
+%
+Actually, $\Phi(f)$ has a corresponding squared functional system given by $\mathcal{S}^2(f) = \Phi(f) \Phi^H(f)$, with $\Phi^H(f)$ being the conjugate transpose of $\Phi(f)$. According to \cite{Nesterov_2000}, let us define a linear operator $\Lambda_H: \mathbf{C}^{N } \rightarrow \mathbf{C}^{N\times N}$  that maps coefficients of a polynomial in $\Phi(f)$ to its squared base, and its adjoint operator  $\Lambda^*_H: \mathbf{C}^{N \times N} \rightarrow \mathbf{C}^N$ such that
+%
+\begin{equation}
+\left(  Y | \Lambda_H(c)  \right)_H = \left( \Lambda^*_H (Y) | c \right)_H, \quad Y \in \mathbf{C}^{N\times N}.
+\label{eq:semidef_Y}
+\end{equation}
+%
+The theory of squared functional systems states that, for
+the trigonometric polynomial $(\Phi(f)|c)$ to be non-negative, it is sufficient that there exists
+a Hermitian semidefinite positive matrix $Y \succeq 0$, such that% the Eq.~\eqref{eq:semidef_Y} holds:
+%
+$$ \Lambda^*_H(Y) = c. $$
+%
+In the case of trigonometric polynomials, the operator $\Lambda_H^*$ is defined by means of Toeplitz matrices:
+\begin{equation}
+	\label{eq:Lambda}
+	\Lambda^*_H(Y) = 
+	\begin{bmatrix}
+		\textrm{tr} \left(  Y |  T_{0} \right) \\
+
+		\vdots \\
+			\textrm{tr} \left(  Y |  T_{N-1} \right) 
+	\end{bmatrix}
+\end{equation}
+with $kl$-coefficients of $T_j$  such that 
+\begin{equation}
+	\begin{aligned}
+		&T_0 = I, \\
+		&T_j^{ ( k,l ) } = \left\{ 
+			\begin{array}{l@{\quad \quad}l}
+				2 & \textrm{if} \ k-l = j \\
+				0 & \textrm{otherwise}
+			\end{array}
+		\quad
+			j = 1, \ldots, N-1.
+			\right.
+	\end{aligned}
+\label{eq:toeplitz}
+\end{equation}
+%
+For an admissible control $u$ valued in $\hat{K}^g_\alpha$, one has
+\begin{equation}
+	\label{eq:integral}
+	\int_0^{2\pi} \sum_{i = 1}^3 u_i(f)G_i(\mybar{I}, f)\,\mathrm{d}f
+	= \sum_{j = 1}^g \left( L_j c_j + \bar{L}_j \bar{c}_j \right) % = \sum_{j = 1}^g \left< L_j, c_j \right>_H 
+\end{equation}
+with $L_j(\mybar{I})$ in $\mathbf{C}^{5 \times N}$ defined by
+\begin{equation}
+	L_j(\mybar{I}) =  \frac{1}{2}\sum_{i = 1}^3 \int_{\mathbf{S}^1} V_{ij} G_i(\mybar{I},f) \Phi^H(f) \, \mathrm{d}f,
+\end{equation}
+where $V_j=(V_{ij})_{i=1,\dots,3}$. We note that the components of $L_j(\mybar{I})$ are Fourier coefficients of the function $\sum_{i = 1}^3 V_{ij} G_i(\mybar{I},f)$. $L_j(\mybar{I})$ are approximated using the \ac{DFT}. Since vector fields $G_i$ are smooth, truncation of the series is justified by the fast decrease of the coefficients.
+Finally, for a control $u$ valued in $\hat{K}^g_\alpha$, coefficients $\nu_j$ are truncated Fourier series of order $N-1$.
+%
+As a result, for a given vector $d_I$, the SDP approximation is
+\begin{equation}
+	\label{eq:max_pb_discrete}
+	\begin{aligned}
+		\max_{c_j \in \mathbf{C}^N,\ Y_j \in \mathbf{C}^{N \times N}} (\delta I|d_I) \quad
+		\text{subject to}
+		\quad & \delta I = \veps \sum_{j = 1}^g \left( L_j c_j + \bar{L}_j \bar{c}_j \right)
+		\text{ parallel to } d_I\\
+		& Y_j \succeq 0,\quad \Lambda^* \left( Y_j \right) = c_j,\quad j = 1, \ldots, g.
+	\end{aligned}
+\end{equation}
+%
+\com{L: add the discretization of the constraint $\sum_j \nu_j(f)=1$}
+%
+The Lagrange variable of the discretization of the equality constraint that $\delta I$ is parallel to $d_I$
+from the convex program is expected to
+be a fair approximation of the costate $p_{\delta I}$ of \eqref{eq:opti_pb}.
+More importantly, it is hoped that
+the bang-bang control structure associated with this $p_{\delta I}$ is indeed the same as for the solution
+of the problem defined on $\hat{K}_\alpha$.
+
+%% to initialize the shooting. Thus, after solving convex optimisation problem, knowledge of the structure of the solution and an approximation of $p_{\delta I}$ serve to initialize multiple shooting on the bounded cone $\hat{K}_{\alpha}$. Nevertheless, solving the problem on the real control set $U$ can only improve solutions. By "inflating" the bounded cone to the real control set, new better solutions are available. Differential continuation, or homotopy, allows continuous deformation of the solution from the bounded cone to the non-convex control set, without any need to use another shooting, which does not have guarantee of convergence. 
+
+\subsection{Multiple shooting, differential continuation and callback} \label{ssec:homotopy}
+%% As was discussed earlier and showed in Fig.~\eqref{fig:best_controls_drop}, while solving the problem on the real control set, only the "inflated" part of the cone can be optimal solution, or 0. This is due to the constant use of maximum control, what was proved in the Sec.~\eqref{ssec:hamiltonian_descr}. To avoid further shooting that do not have a guarantee of convergence, we can use homotopy to find an optimal solution on the initial control set.
+%% Homotopy, or continuation method, allows to solve a complex problem by gradual differentiation
+%
+%% Multiple shooting method consists in solving a $n$-dimensional nonlinear equations given by $S(\bar{p}_{\delta I}, \mybar{I}, f) = 0$, where $S: \mathbf{R}^5 \times \mathcal{M} \times \mathbf{S}^1 \rightarrow  \mathbf{R}^n$ is a smooth map and corresponds to a shooting function. Continuation technique consists in finding a deformation $D(\bar{p}_{\delta I}, \mybar{I}, f, \lambda): \mathcal{M} \times \mathbf{R}^5 \times \mathbf{S}^1 \times [0,1] \rightarrow  \mathbf{R}^n$ such that:
+%% 
+%% \begin{equation}
+%% 	D(\bar{p}_{\delta I}, \mybar{I}, f, 0) = D_0 (\bar{p}_{\delta I}, \mybar{I}, f),  \quad D(\bar{p}_{\delta I}, \mybar{I}, f, 1) = S(\bar{p}_{\delta I}, \mybar{I}, f),
+%% \end{equation}
+%% 
+%% where $D_0$ is a smooth map having known zero points. Let us denote $\mathcal{C}(l)$ a curve with $l$ its length describing a zero path, which starts from $\bar{p}_{\delta I}^0$ such that $D(\bar{p}_{\delta I}^0, \mybar{I}, f, 0) = 0$ and ends at a point $\bar{p}_{\delta I}^1$ such that $D(\bar{p}_{\delta I}^1,
+%% \mybar{I}, f, 1) = 0$.
+%% Optimisation problem on the bounded cone give a good initial guess that can be used for solving the optimal control problem on the bounded cone and then to use continuation techniques to find the solution of the initial problem. Nevertheless, it happens that by inflating the control set, new optimal solutions appear and the structure of the solution changes. However, while using multiple shooting, one should tell the algorithm about the number of bangs and zeros of the solution. To overcome this challenge, we include in our algorithm a callback, that detects when an arc's length approaches zero and re-initialize a new shoot with a reduced number of arcs, which depends of the number of roots of a switch function. Thus, our methodology consists in: 
+%
+Homotopy, \emph{aka.} continuation, allows to solve a complex problem by connecting it continuously to
+a simpler problem. The idea is then to follow the path (assumed to be regular enough) of solutions from
+the simpler problem towards the targeted one.
+See, \emph{e.g.}, \cite{gergaud-2006a,Trelat2017} for applications in optimal control.
+In our case, a parameter $\lambda$ defined between $0$ and $1$ allows to connect the problem with control
+set the bounded convex cone $\hat{K}_\alpha$ at $\lambda=0$, to the original problem with the
+non-convex drop-like control set $U$ at $\lambda=1$.
+In order to be able to solve the problem for $\lambda=0$, we rely on the solution of the convex
+program on $\hat{K}^g_\alpha$ to provide an admissible solution.
+This solution is used not only to compute an
+educated guess for the initial costate but also to devise the appropriate multiple shooting function. 
+To do so, we use the control structure
+corresponding to the approximation of $p_{\delta I}$ provided by the
+convex optimization and described at Proposition~\ref{prop102}. This proposition tells us that,
+when $\psi$ (a function of $p_{\delta I}$ and $f$) belongs to the open complement of the polar cone
+$K^0_\alpha$, the control must be equal to the \emph{dynamical feedback} described case (ii-a)
+(apart for some isolated points that correspond to case (ii-b) that we can neglect); we denote
+$u^0_b(f,p_{\delta I})$ this control. Similarly, for such values of $\psi$, Proposition~\ref{prop101} for
+the problem on $\conv(U)$---and actually $U$, check Corollary~\ref{cor110}---, implies that the control must
+be a solution of (\ref{eq104})-(\ref{eq105}). (While these equations provide an explicit solution for 
+the coordinate $\delta$ of the control, $\beta$ is only implicitly defined and we discuss its actual 
+computation in Section~\ref{s33}.)
+We assume that this solution is unique and denote it $u^1_b(f,p_{\delta I})$.
+Then, for $\lambda$ in $[0,1]$ and $\psi$ outside the polar cone, we define
+$$ u_b(f,p_{\delta I},\lambda) := (1-\lambda)u^0_b(f,p_{\delta I}) + \lambda u^1_b(f,p_{\delta I}) $$
+as the convex combination of the dynamical feedbacks for $\lambda=0$ and $\lambda=1$.
+Conversely, for any $\lambda$ in $[0,1]$ and $\psi$ in the interior of the polar cone, the control is set
+to zero.
+
+For a given $\lambda$, one has a finite sequence of arcs with either $u=u_b$ (bang arcs),
+or $u=0$ (zero arcs). Contacts with $\partial K^0_\alpha$ are characterized by \eqref{eq103} whose
+left-hand side defines the switching function, denoted $\vphi(f,p_{\delta I})$ (not depending on
+$\lambda$ in our particular setting).
+To this finite sequence of arcs is associated a multiple shooting function in a standard fashion.
+Assume for instance that the structure is bang-zero-bang.
+Then the shooting function has three arguments: the (constant)
+value of the costate, $p_{\delta I}$, and the two switchings times (true anomalies) bounding the central zero
+arc, $f_1$ and $f_2$. (So that $(p_{\delta I},f_1,f_2)$ belong to $\R^7$.)
+Plugging $u=u_b(f,p_{\delta I},\lambda)$ into the dynamics of $\delta I$ and integrating
+on $[0,f_1]$ from $\delta I(0)=0$ allows to compute $\delta I_1 := \delta I(f_1)$. As the control is zero on 
+$[f_1, f_2]$, $\delta I$ remains constant on the coast arc and we set $\delta I_2 := \delta I_1$. The control
+$u=u_b(f,p_{\delta I},\lambda)$ is eventually plugged again on $[f_2,2\pi]$ to compute
+$\delta I_f := \delta I(2\pi)$, starting from $\delta I_2$. The associated value of the shooting function is
+obtained by concatenating the left-hand side of the four equations below, forming a vector of dimension
+$4+1+2=7$ (note that the first colinearity equation indeed has dimension $5-1=4$):
+%
+\begin{eqnarray}
+  \delta I_f \wedge d_I &=& 0,\\
+  (p_{\delta I}|d_I) - 1 &=& 0,\\ \label{eq112} 
+  \vphi(f_1,p_{\delta I}) &=& 0,\\
+  \vphi(f_2,p_{\delta I}) &=& 0.
+\end{eqnarray}
+%
+%\begin{remark} debug: remark on Hamiltonian character, see section on implicit
+%\end{remark}
+%
+This defines a shooting function $S(\xi,\lambda)$ with, for this bang-zero-bang structure,
+$\xi:=(p_{\delta I},f_1,f_2)$. Once the first solution for $\lambda=0$ is obtained, the path of zeros
+is followed by differential continuation, typically using a parametrisation by
+its curvilinear abscissa:
+%
+$$ s \mapsto (\lambda(s),\xi(s)) \text{ with } S(\xi(s),\lambda(s)) = 0. $$
+%
+We refer, \emph{e.g.}, to \cite{caillau-2012b} for the assumptions needed to do so. Note that, according to
+\eqref{eq112}, we look for normal extremals (compare with \eqref{eq113}).
+
+One important issue in practice is
+that it might not be possible to reach $\lambda=1$ because, at some $\lambda(\bar{s})$
+in $(0,1)$, the structure
+of the solution changes; for instance because one subarcs disappears. It is crucial to be able to detect
+such a change during homotopy since then, the shooting function has to be redefined according to the new 
+structure. This is achieved using a standard callback mechanism along with differential continuation.
+On the previous bang-zero-bang example, the continuation is monitored and, at each step of the path
+following procedure, a simple test is performed: if the exit time of the zero arc, $f_2$, becomes inferior to 
+the entry time $f_1$ (this is detected by a sign change on $f_2-f_1$, as going forward in time makes sense
+mathematically but is not
+allowed to obtain admissible trajectories), the continuation is stopped. And restarted at $\lambda(\bar{s})$
+with a new shooting function (in this case, a single shooting one, as only one bang arc would be left),
+using $\xi(\bar{s})$ as initial guess. More elaborated tests can be constructed to detect a new arc appearing,
+\emph{etc.} In our case, a callback is used to detect a structure change from $5$ subarcs to $3$
+(see Section~\ref{sec4}).
+
+\begin{figure}[t]
+	\centering
+		\includegraphics[width=0.8\textwidth]{algo.png}
+		\caption{Algorithm for solving \ac{OCP}.}
+		\label{fig:algo}
+\end{figure}
+
+\subsection{Implicit treatment of the Hamiltonian maximisation} \label{s33}
+Regarding the computation of $u^1_b(f,p_{\delta I})$,
+we know after Proposition~\ref{prop101} that the control is either zero, either solution of
+(\ref{eq104}-\ref{eq105}). The first equation for the coordinate $\beta$ of $u$ has no closed form solution.
+There is a preliminary numerical discussion of the number of solutions in \cite{mengali-2005a}
+(we actually look for a global maximizer of the Hamiltonian over $U$, which may allow to eliminate some strictly
+local minimizer that also verify (\ref{eq104})) for a particular set of values of the sail parameters. More
+generally, while maximization of the Hamiltonian often yields an explicit expression of the control as a dynamics 
+feedback function of the state and the costate, it is not always the case. In such a situation, we advocate an 
+implicit treatment of this maximization,
+incorporating the stationarity equation of the Hamiltonian
+%% (or of the associated Lagrangian if there are constraints on the control that must be taken care of)
+into the shooting procedure.
+We sketch below a simple way to do so in a general setting.
+
+Assume that, after applying Pontrjagin maximum principle, one has to integrate the following system
+($x$ denoting the state, $p$ the costate):
+\begin{equation} \label{eq110}
+  \dot{x}(t) = \nabla_p H(x(t),p(t),u(t)),\quad \dot{p}(t) = -\nabla_x H(x(t),p(t),u(t)), 
+\end{equation}
+where, at each time $t$, $u(t)$ verifies
+\begin{equation} \label{eq111}
+  \nabla_u H(x(t),p(t),u(t)) = 0.
+\end{equation}
+The last stationarity equation corresponds to an unconstrained situation---whereas a Lagrangian, plus an
+additional finite dimensional multiplier, should be considered in the presence of constraints---, and defines
+a semi-explicit DAE.
+Assume that the strong Legendre-Clebsch condition holds in an open neighborhood of the reference extremal times 
+the open control set, $\nabla^2_{uu} H \geq c I$ for some positive constant $c$. Then the Hamiltonian has a unique 
+maximizer, that satisfies $\nabla_u H=0$, and the previous DAE is of index $1$ (differentiating once
+\eqref{eq111} allows to solve for $\dot{u}$). In particular, one
+can extend the Hamiltonian system \eqref{eq110} by adding the equation
+$$ \dot{u} = -\nabla^2_{uu} H^{-1} (\nabla_{ux} H \cdot\nabla_p H - \nabla_{up} H\cdot\nabla_{x} H)(x,p,u)
+   := g(x,p,u), $$
+with initial condition $\nabla_u H(x(0),p(0),u(0))=0$.
+The new system remains Hamiltonian as is clear setting
+$\hat{x}:=(x,u)$, $\hat{p}:=(p,p_u)$ and
+$$ \hat{H}(x,u,p,p_u) := H(x,p,u) + (p_u|g(x,p,u)) $$
+with $p_u(0)=0$. (One can obviously eliminate the trivial equation on $p_u$, which is an extra but
+identically zero costate.) In the case of a shooting approach, the value of $u(0)$ is an additional shooting
+variable. Keeping the system in Hamiltonian form is convenient in the algorithmic framework described in
+Section~\ref{sec4}, but other approaches for DAE such as predictor-corrector ones can of course be considered.
+In our case, we use this approach with $x=\delta I$, $p=p_{\delta I}$ to deal with the implicit equation
+\eqref{eq104} on $\beta$ (while we use \eqref{eq105} to solve explicitly for $\delta$).
+The combination of this implicit 
+approach with multiple shooting, homotopy and callback is described in the last section.
+
+\section{Numerical examples} \label{sec4}
+
+The \ac{OCP}~\eqref{eq:opt_cntr_pb} is solved using \textit{control toolbox (CT)} and \textit{nutopy} package for python. An example of the code which executable online is available.\footnote{https://ct.gitlabpages.inria.fr/gallery/solarsail/solarsail-simple-version.html} The results are presented in Sec.~\ref{ssec:case_study}.
+
+%\subsection{Simple example of a desired orbital change}
+%DO NOT KEEP (SINGLE SHOOTING CODE)
+
+Consider again System~\eqref{eq:syst_init}. Optical properties of the sail determining shape of $U$ are taken from JPL Square Sail defined in \cite[Table 2.1]{McInnes_1999}: $\rho = 0.88, \, s = 0.94, \, \epsilon_b = 0.55, \, \epsilon_f = 0.05,  \, B_b = 0.55, \,  B_f = 0.79$. 
+
+%% First, an optimisation problem is solved to provide solutions of the control on bounded code, which are used as initial guess for \ac{OCP}. Then, \ac{OCP} is solved on the real control set giving control maximizing the displacement. Finally, the results are compared. 
+%% 
+%% 
+%% The initial conditions used for the following example are: $d_I = (0,0,0,0,1)$, corresponding to the increase of eccentricity as the desired maneuver, and $ \mybar{I} = (10^\circ, 20^\circ, 30^\circ, 1, 0.5)$.
+%% 
+%% First, Figs.~\ref{fig:sol_conv1_proj} and \ref{fig:sol_conv1_angles} show solutions obtained using convex optimisation programming with a bounded conical control set as projections o the $\uvect{s}, \uvect{s}^{\perp}$ vectors and sail's orientation angles (cone angle $\beta$ and clock angle $\delta$). \rem{en fait on a jamais introduit les angles beta delta ?} The adjoint vector is
+%% $$p_{I}^{conv} = (-0.3165,   -1.2780,   -0.0747,   -0.3282,    1).$$
+%% 
+%% This result is then used to solve an  \ac{OCP} on a real control set. Figs.~\ref{fig:sol_multi_shoot_proj} and \ref{fig:sol_multi_shoot_angles} represent the solution. The obtained adjoint vector is
+%% $$p_{I}^{OCP} = (-0.2433, -0.8443, -0.0969, -0.2388,  1).$$
+%% 
+%% One can easily verify that the first solution has a shape of bangs, while the second is composed of two \rem{singular arcs} and a bang corresponding to zero, so no control. As was analyzed earlier, using the drop-like control set instead of the bounded cone can only improve the solution. Therefore, Figs.~\ref{fig:sol_conv1_proj} and  \ref{fig:sol_multi_shoot_projt} show that magnitude of the controls is more important with a real control set. We can also mention that the gap between two bangs in the first plot has the same amplitude, as the gap between a \rem{singular arc} and a zero-bang on the second one. \doubt{This gap corresponds to the gap between points of tangency between the cone and the drop-like control set and zero, as all controls between theses points are sub-optimal.}
+%% 
+%% \begin{figure}[h!]
+%% 	\centering
+%% 	\begin{subfigure}[b]{0.45\textwidth}
+%% 		\centering
+%% 		\includegraphics[width=\textwidth]{main11_paper_convex1_2_controls}
+%% 		\caption{Solution of the optimisation problem ~\eqref{eq:max_pb_discrete} on a bounded convex cone as projection on $\uvect{s}$, $\uvect{s}^{\perp}$.}
+%% 		\label{fig:sol_conv1_proj}
+%% 		%\vspace{0.5 cm}
+%% 	\end{subfigure}
+%% 	\hspace{1cm}
+%% 	\begin{subfigure}[b]{0.45\textwidth}
+%% 		\centering
+%% 		\includegraphics[width=\textwidth]{main11_paper_mult_shoot_2_controls}
+%% 		\caption{Solution of the optimal control problem ~\eqref{eq:opt_cntr_pb} on a real control set  as projection on $\uvect{s}$, $\uvect{s}^{\perp}$.}
+%% 		\label{fig:sol_multi_shoot_proj}
+%% 		%	\vspace{0.5 cm}
+%% 	\end{subfigure}
+%% 	\begin{subfigure}[t]{0.45\textwidth}
+%% 		\centering
+%% 		\includegraphics[width=\textwidth]{main11_paper_convex1_2_angles}
+%% 		\caption{Solution of the optimisation problem ~\eqref{eq:max_pb_discrete} on a bounded convex cone as orientation angles.}
+%% 		\label{fig:sol_conv1_angles}
+%% 	\end{subfigure}
+%% 	\hspace{1cm}
+%% 	\begin{subfigure}[t]{0.45\textwidth}
+%% 		\centering
+%% 		\includegraphics[width=\textwidth]{main11_paper_mult_shoot_2_angles}
+%% 		\caption{Solution of the optimal control problem ~\eqref{eq:opt_cntr_pb} on a real control set as orientation angles.}
+%% 		\label{fig:sol_multi_shoot_angles}
+%% 	\end{subfigure}
+%% 	\begin{subfigure}[b]{0.45\textwidth}
+%% 		\centering
+%% 		\includegraphics[width=\textwidth]{main11_paper_traj_real_convex1.eps}
+%% 		\caption{Trajectory of the sail with controls obtained with convex programming .}
+%% 		\label{fig:sol_traj_conv1}
+%% 	\end{subfigure}
+%% 	\hspace{1cm}
+%% 	\begin{subfigure}[b]{0.45\textwidth}
+%% 		\centering
+%% 		\includegraphics[width=\textwidth]{main11_paper_traj_real_mult.eps}
+%% 		\caption{Trajectory of the sail with controls obtained with \ac{OCP}.}
+%% 		\label{fig:sol_traj_mult}
+%% 	\end{subfigure}
+%% 	\caption{Solutions of two problems with $d_I = (0,0,0,0,1), \, \mybar{I} = (10^\circ, 20^\circ, 30^\circ, 1, 0.5)$.}
+%% 	\label{fig:sol_both_conv_opt_mult_shoot}
+%% \end{figure}
+%% 
+%% To verify exactness of the solution, trajectory of the initial system is integrated using the control given by convex programming and \ac{OCP}. Figures~\ref{fig:sol_traj_conv1} and ~\ref{fig:sol_traj_mult}  show that after one orbital period, the only slow variable which displacement is not zero, is eccentricity $e$, what corresponds to the desired direction. 
+ 
+%% \subsection{Example with change of structure}
+
+We consider an example such that a structure change occurs during continuation. The initial conditions are: $d_I = (0,1,0,0,0)$, what translates increase of inclination $\gamma_2$, and $ \mybar{I} = (10^\circ, 50^\circ, 30^\circ, 1, 0.1)$.
+
+Figs.~\ref{fig:sol_conv2_proj} and \ref{fig:sol_conv2_angles} show solution of the convex optimisation program on a bounded cone. The adjoint vector is
+$$p_{I}^{conv} = (-0.0837,    1,   -0.0052,    0.0398,    0.0852).$$
+
+Using it as the initial guess to solve \ac{OCP} on a real control set, the solution is represented in Figs.~\ref{fig:sol_simple_shoot_proj} and \ref{fig:sol_simple_shoot_angles}. The corresponding adjoint is
+$$p_{I}^{OCP} = (-0.1637,  1,         -0.0972,  0.0712,  1.6037).$$
+
+The first solution has consists of 5 bangs, with 4 switches. However, the second solution has only 2 switches and contains 2 bangs and one \rem{singular arc}. This difference is due to different co-vectors and dynamics close to the polar cone, which results in different roots quantity of the switch function.  
+
+Similarly, Fig.~\ref{fig:sol_traj_conv2} and \ref{fig:sol_traj_simple} plots trajectory resulting from integration of the system by injecting the solutions from convex programming and \ac{OCP} respectively. The direction of displacement is increase of inclination, what corresponds to the requirement.
+
+\begin{figure}[ht]
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_convex2_2_controls}
+		\caption{Solution of the optimisation problem ~\eqref{eq:max_pb_discrete} on a bounded convex cone  as projection on $\uvect{s}$, $\uvect{s}^{\perp}$.}
+		\label{fig:sol_conv2_proj}
+		%	\vspace{0.5 cm}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_simple_shoot_2_controls}
+		\caption{Solution of the optimal control problem ~\eqref{eq:opt_cntr_pb} on a real control set  as projection on $\uvect{s}$, $\uvect{s}^{\perp}$.}
+		\label{fig:sol_simple_shoot_proj}
+		%\vspace{0.5 cm}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_convex2_2_angles}
+		\caption{Solution of the optimisation problem ~\eqref{eq:max_pb_discrete} on a bounded convex cone as orientation angles.}
+		\label{fig:sol_conv2_angles}
+		%	\vspace{0.5 cm}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_simple_shoot_2_angles}
+		\caption{Solution of the optimal control problem ~\eqref{eq:opt_cntr_pb} on a real control set as orientation angles.}
+		\label{fig:sol_simple_shoot_angles}
+		%	\vspace{0.5 cm}
+	\end{subfigure}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_traj_real_convex2.eps}
+		\caption{Trajectory of the sail with controls obtained with convex programming.}
+		\label{fig:sol_traj_conv2}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_traj_real_smpl_ChoS.eps}
+		\caption{Trajectory of the sail with controls obtained with \ac{OCP}.}
+		\label{fig:sol_traj_simple}
+	\end{subfigure}
+	\caption{Solutions of two problems with $d_I = (0,1,0,0,0), \, \mybar{I} = (10^\circ, 50^\circ, 30^\circ, 1, 0.1)$.}
+	\label{fig:sol_both_conv_opt_simple_shoot_ChoS}
+\end{figure}
+
+One can notice that the solutions given by convex optimisation problems have a stairs shape. It is indeed due to the discretization of the convex cone using a finite number of generators. It can be easily verified by solving the \ac{OCP} using multiple shooting and the same initial guess directly on the bounded cone instead of the real control set. Fig.\ref{fig:stairs} compares these two approaches using the data from the first case study. Again, solutions on the left are taken directly from the convex computation, when the right-side solutions are provided by \ac{OCP} on a bounded cone. They are similar, except for the discrete form due to cone discretization as shown in Fig.~\ref{fig:ext_int}.
+
+\begin{figure}
+	\centering
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_convex1_2_controls}
+		\caption{Solution of the optimisation problem ~\eqref{eq:max_pb_discrete} on a bounded convex cone as projection on $\uvect{s}$, $\uvect{s}^{\perp}$.}
+		\label{fig:sol_conv1_proj_rem}
+		%\vspace{0.5 cm}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[b]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_mult_shoot_cont0_2_controls}
+		\caption{Solution of the optimal control problem ~\eqref{eq:opt_cntr_pb} on a real control set  as projection on $\uvect{s}$, $\uvect{s}^{\perp}$.}
+		\label{fig:sol_multi_shoot_proj_rem}
+		%	\vspace{0.5 cm}
+	\end{subfigure}
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_convex1_2_angles}
+		\caption{Solution of the optimisation problem ~\eqref{eq:max_pb_discrete} on a bounded convex cone as orientation angles.}
+		\label{fig:sol_conv1_angles_rem}
+	\end{subfigure}
+	\hspace{1cm}
+	\begin{subfigure}[t]{0.45\textwidth}
+		\centering
+		\includegraphics[width=\textwidth]{main11_paper_mult_shoot_cont0_2_angles}
+		\caption{Solution of the optimal control problem ~\eqref{eq:opt_cntr_pb} on a real control set as orientation angles.}
+		\label{fig:sol_multi_shoot_angles_rem}
+	\end{subfigure}
+	\caption{Explanation of a stairs-shaped solution of convex programming.}
+	\label{fig:stairs}
+\end{figure}
+
+\section*{Conclusion}
+
+\section*{Acknowledgements}
+This work was partially supported by ESA (contract no. 4000134950/21/NL/GLC/my).
+
+\section*{Supporting information}
+
+The following supporting information is available as part of the online article:
+
+%\noindent
+%\textbf{Figure S1.}
+%{500{\uns}hPa geopotential anomalies for GC2C calculated against the ERA Interim reanalysis. The period is 1989--2008.}
+%
+%\noindent
+%\textbf{Figure S2.}
+%{The SST anomalies for GC2C calculated against the observations (OIsst).}
+%
+%
+%\appendix
+%\section{Section title of first appendix\label{app1}}
+%
+%
+%\subsection{Subsection title of first appendix\label{app1.1a}
+%...
+%%%-----------------------------
+%%%      your bibliography
+%%%-----------------------------
+% \bibliographystyle{IEEEtran}
+\bibliography{references}
+%%\end{document}
+%%
+%%
+%
+%
+%
+%\nocite{*}% Show all bib entries - both cited and uncited; comment this line to view only cited bib entries;
+%\bibliography{references.bib}%
+
+\clearpage
+
+\section*{Author Biography}
+
+\begin{biography}{\includegraphics[width=66pt,height=86pt,draft]{empty}}{\textbf{Author Name.} This is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text this is sample author biography text.}
+\end{biography}
+
+\end{document}
