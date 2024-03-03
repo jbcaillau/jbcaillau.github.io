@@ -1,0 +1,28 @@
+= Just
+
+== A try
+of 
+
+=== asciidoc
+with some *text* or _text_ and
+
+- stuff
+- and **more**
+* [ ] @jbcaillau
+
+[%interactive]
+- [X] 0
+- [ ] a
+- [ ] b
+
+and
+
+1. foo
+1. fee
+
+and https://foo.org[foo] and $x_1$ plus $\int_0^1 f(x)$
+
+\[
+\int_0^1 f(x)
+\]
+
