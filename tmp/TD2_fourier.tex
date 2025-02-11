@@ -1,0 +1,207 @@
+\documentclass[11pt]{amsart}
+
+\usepackage[french]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage{bbm}
+\usepackage{graphicx}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{xcolor}
+\usepackage{mathtools}
+\usepackage{bm}
+\usepackage{braket}
+\usepackage{dsfont}
+\usepackage{upgreek}
+\usepackage[norelsize,french,ruled]{algorithm2e}
+\usepackage{multirow}
+\usepackage{enumitem}
+\usepackage{tikz}
+%\addtolength{\headheight}{1cm}
+
+
+
+\renewcommand{\refname}{R\'ef\'erences}
+
+\oddsidemargin = 0pt \evensidemargin = 0pt \marginparwidth = 1in%\marginparsep = 0pt 
+\leftmargin = 1.25in \topmargin = 0pt
+\headsep = 10pt \topskip = 0pt \footskip = 0.25in 
+\textheight = 22cm \textwidth = 6.5in
+
+\newtheoremstyle{exercice}
+{3pt} %Space  above
+{5pt} %Space below
+{} %Body font
+{} %Indent amount, empty no indent % \parindent=paragraph
+{\bfseries} %Theorem head font
+{.} %Ponctuation after theorem head
+{0.5em} %Space after theorem head. \newline=linebreak
+{}%Theorem head spec {can be left empty meaning normal
+
+\newtheoremstyle{question}{2pt}{0pt}{}{}{\bfseries}{}{0pt}{#2) #3}
+
+\newtheorem{theorem}{Th\'eor\`eme}
+\newtheorem{lemma}[theorem]{Lemme}
+\newtheorem{proposition}[theorem]{Proposition}
+\newtheorem{corollary}[theorem]{Corollaire}
+\theoremstyle{remark}
+\newtheorem{remark}{Remarque}
+\theoremstyle{exercice}
+\newtheorem{exo}{Exercice}
+\newtheorem{ex}{Exemple}
+
+\newcommand\blfootnote[1]{%
+  \begingroup
+  \renewcommand\thefootnote{}\footnote{#1}%
+  \addtocounter{footnote}{-1}%
+  \endgroup
+}
+
+\newcommand{\titre}[3] 
+% #1: titre #2: classe #3: ann\'ee
+{
+\noindent\parbox{7cm}
+{
+\noindent \textbf{#2}\\
+#3
+}
+\hfill
+%\parbox{5cm}
+{ 
+Année 2024--2025}
+
+\vspace{0.5 cm} 
+
+\begin{center}\rule{\textwidth}{0.2mm}\end{center}
+\vspace{0.2cm}
+\begin{center}{\large{\textsc{#1}}}\end{center}
+\begin{center}\rule{\textwidth}{0.2mm}\end{center}
+
+\vspace{0.5cm}
+}
+
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\N}{\mathbb{N}}
+\newcommand{\Z}{\mathbb{Z}}
+\newcommand{\Q}{\mathbb{Q}}
+\newcommand{\F}{\mathbb{F}}
+\newcommand{\K}{\mathbb{K}}
+\newcommand{\un}{(u_n)_{n\in \N}}
+\newcommand{\an}{(a_n)_{n\in \N}}
+\newcommand{\Sn}{(S_n)_{n\in \N}}
+\newcommand{\Rn}{(R_n)_{n\in \N}}
+\newcommand{\se}{\sum_{n\ge 0} u_n}
+
+\newcommand{\eps}{\varepsilon}
+\newcommand{\defi}[1]{{\bf #1}}
+
+\DeclareMathOperator{\card}{card}
+\DeclareMathOperator{\re}{Re}
+\DeclareMathOperator{\im}{Im}
+
+\setlist[itemize,1]{label=\textbullet}
+
+\makeatletter
+\@addtoreset{section}{part}
+\makeatother
+
+%\makeatletter
+%\renewcommand\part{\@startsection{part}{2}%
+%  \z@{.5\linespacing\@plus.7\linespacing}{-.5em}%
+%  {\normalfont\scshape}}
+%\makeatother
+
+\makeatletter
+\def\part{\@startsection{part}{0}%
+  \z@{\linespacing\@plus\linespacing}{.5\linespacing}%
+  {\normalfont\scshape\raggedright}}
+\makeatother
+
+%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\begin{document}
+
+\titre{TD 2 : transformée de Fourier \blfootnote{\textbf{Auteur :} Simona ROTA NODARI \\ \texttt{simona.rotanodari@univ-cotedazur.fr}}}{Université Côte d'Azur}{M1 Analyse de Fourier et distributions}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+Dans la suite, nous noterons $m_d$ la mesure de Lebesgue $\lambda$ sur $\R^d$ divisée par $(2\pi)^{d/2}$ et $m$ la mesure $m_1$. De plus, pour tout $p\in[1,\infty[$, nous noterons $L^p(\R^d):=L^p(\R^d,m_d)$ avec norme $\|f\|_p=(\int_{\R^d}|f(x)|^p\,dm_d(x)))^{1/p}$.
+
+Soit $f\in L^1(\R^d)$. La \defi{transformée de Fourier} de $f$ est la fonction 
+\begin{equation*}\label{defFourier}
+  \mathcal F(f)(t)=\hat f(t)=\int_{\R^d} f(x)e^{-ix\cdot t}\,dm_d(x)=\frac{1}{(2\pi)^{d/2}}\int_{\R^d} f(x)e^{-ix\cdot t}\,d\lambda_d(x).
+\end{equation*}
+
+\exo{
+  Soient $f\in L^1(\R^d)$ et $\alpha,\lambda\in \R$. Montrer les propriétés suivantes.
+    \begin{enumerate}
+        \item Si $g(x)=f(x)e^{i\alpha x}$, alors $\hat g(t)=\hat f(t-\alpha)$.
+        \item Si $g(x)=f(x-\alpha)$, alors $\hat g(t)=\hat f(t)e^{-i\alpha t}$.
+        %\item Si $g\in L^1(\R^n)$, alors $\widehat{f\star g}(t)=\hat f(t)\hat g(t)$.
+        \item Si $g(x)=\overline{f(-x)}$, alors $\hat g(t)=\overline{\hat {f}(t)}$.
+        \item Si $g(x)=f\left(\frac{x}{\lambda}\right)$ and $\lambda>0$, alors $\hat g(t)=\lambda^n\hat f(\lambda t)$.
+        %\item Si $g_k(x)=-ix_kf(x)$ et $g_k\in L^1(\R^n)$ pour tout $k=1,\ldots,n$, alors $\hat f$ est de classe $\mathcal C^1$ et $\partial_{t_k}\hat f(t)=\hat g_k(t)$. 
+    \end{enumerate}
+}
+
+\exo{Calculer la transformée de Fourier des fonctions suivantes.
+\begin{enumerate}
+  \item $f(x)=\chi_{[-a,a]}(x)$, $x\in \R$ et $a>0$.
+  \item $f(x)=\chi_{[a,b]}(x)$, $x\in \R$ et $a, b\in \R$, $a<b$.
+  \item \begin{equation*}
+    f(x)=\left\{
+      \begin{aligned}
+        &1+x& -1\le x\le 0\\
+        &1-x& 0\le x\le 1\\
+        &0& |x|>1
+      \end{aligned}
+    \right..
+  \end{equation*}
+  Combien vaut $\hat f(0)$?
+\end{enumerate}
+}
+
+\exo{
+  Soit $f\in L^1(\R)$ et $\alpha\in \R$. Montrer que la fonction $\varphi(t)=\hat f(t)\cos(\alpha t)$ est la transformée de Fourier d'une fonction de $L^1(\R)$ que l'on explicitera en fonction de $f$ et $\alpha$. Même question pour $\psi(t)=\hat f(t)\cos(\alpha t)$.
+}
+
+\exo{
+  Soit $f:\R\to\R$ une fonction de classe $\mathcal C^2(\R)$ telle que $f, f', f''\in L^1(\R)$. Montrer que $\hat f\in L^1(\R)$.
+}
+
+\exo{
+  \begin{enumerate}
+    \item En utilisant la transformée de Fourier, montrer qu'il n'existe pas de fonction $g\in L^1(\R^d)$ telle que $f\star g=f$ pour tout $f\in L^1(\R^d)$. 
+    \item Resoudre dans $L^1(\R^d)$ l'équation $f\star f=f$.
+  \end{enumerate}
+}
+
+\exo{ Pour $\alpha>0$, on pose $f_\alpha(x)=e^{-\alpha|x|}$ pour tout $x\in \R$.
+\begin{enumerate}
+\item Calculer la transformée de Fourier de $f_\alpha$.
+\item À l'aide du théorème d'inversion, en déduire la transformée de Fourier de $x\mapsto \frac{1}{\alpha^2+x^2}$.
+\item Calculer $f_\alpha\star f_\alpha$ et en déduire la transformée de Fourier de $x\mapsto \frac{1}{(\alpha^2+x^2)^2}$.
+\item Déterminer la transformée de Fourier de $x\mapsto \frac{x}{(1+x^2)^2}$.
+\end{enumerate}
+}
+
+\exo{ Soient $X$ et $Y$ deux espaces métriques complets. Soient $X_0$ un sous-ensemble dense de $X$ et $f:X_0\to f(X_0)\subset Y$ une isométrie.
+\begin{enumerate}
+    \item Montrer que l'application $f$ se prolonge en une unique fonction continue $\tilde f:X\to Y$.
+    \item Montrer que si $f(X_0)$ est un sous-ensemble dense de $Y$, alors $\tilde f$ est une isométrie surjective de $X$ dans $Y$.
+\end{enumerate}
+}
+
+\exo{
+  À l'aide de la trasformée de Fourier, calculer les intégrales suivantes.
+  \begin{enumerate}
+    \item   $\int_{\R}\frac{\sin(t)^2}{t^2}\,dt$.
+    \item $\int_{\R}\frac{1}{(a^2+x^2)(b^2+x^2)}\,dx$, $a,b>0$.
+  \end{enumerate}
+
+}
+
+\end{document}
