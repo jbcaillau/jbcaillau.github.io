@@ -42,5 +42,5 @@ end
 
 ε = 1e-4 # L^2 regularisation
 
-sol_r = solve(ocp_r(ε); grid_size=N, tol=tol)
+sol_r = solve(ocp_r(ε); grid_size=N)
 plot(sol_r)
