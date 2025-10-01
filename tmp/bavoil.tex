@@ -1,0 +1,55 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage{graphicx}
+\usepackage{hyperref}
+
+% uncomment according to your operating system:
+% ------------------------------------------------
+% \usepackage[latin1]{inputenc}    %% european characters can be used (Windows, old Linux)
+%\usepackage[utf8]{inputenc}     %% european characters can be used (Linux)
+% \usepackage[applemac]{inputenc} %% european characters can be used (Mac OS)
+% ------------------------------------------------
+
+\usepackage[T1]{fontenc}
+\pagestyle{empty}
+\usepackage{fullpage}
+
+\begin{document}
+\thispagestyle{empty}
+
+\title{\textbf{A kite-based generator for airborne wind energy: modelling and optimisation}}
+
+\author{
+\underline{Antonin Bavoil}$^1$ \\[5pt]
+% Affiliations are put manually
+\small $^1$Université C\^ote d'Azur, CNRS, France, \texttt{antonin.bavoil@univ-cotedazur.fr} \\
+}
+
+\date{} % <--- leave date empty
+\maketitle\thispagestyle{empty} %% <-- you need this for the first page
+
+{{\bf Keywords}: Kite, Modelling, ODE, Limit Cycle, Optimization) \\[2em]
+
+
+Using kites to collect wind power and generate energy has been intensively studied in the last decade, see \emph{e.g.} the survey by M.~Diehl \emph{et al} in \cite{diehl-2013a}.
+In the framework of the KEEP (Kite Electrical Energy Power) funded by CNRS and gathering researchers from ENSTA Bretagne (well acquainted with the topic after previous studies on kites \cite{desenclos-2023a}, most notably for boats \cite{podeur-2018a}) and Université C\^ote d'Azur, we are interested in the analysis of a simple device composed of a kite attached to an arm; having the kite running along a well chosen curve will move the arm and generate electric power.
+We first build a simple point-mass mechanical model where the kite motion is prescribed to a conical surface modelled on an eight curve.
+The resulting differential equation can be expressed either as (i) a $5$-dimensional second order DAE, or (ii) a dimension $2$ second order ODE. For well chosen initial conditions, numerical integration of these two equivalent descriptions exhibit a limit cycle.
+We report on the optimization of the parameters of the device to maximize power on the limit cycle, as well as a validation of our approach using a third party trusted library \cite{awebox}.
+
+\begin{thebibliography}{00}
+
+\bibitem{diehl-2013a}
+U. Ahrens, M. Diehl, R. Schmehl, Airborne Wind Energy, Springer, 2013.
+
+\bibitem{desenclos-2023a}
+K. Desenclos, A. Nême, J.-B. Leroux, C. Jochum, A novel composite modelling approach for woven fabric structures applied to leading edge inflatable kites, Mechanics of Composite Materials, 2023.
+
+\bibitem{podeur-2018a}
+V. Podeur, D. Merdrignac, M. Behrel, K. Roncin, C. Fonti, C. Jochum, Y. Parlier, P. Renaud, Fuel economy assessment tool for auxiliary kite propulsion of merchant ship, Houille Blanche, 2018.
+
+\bibitem{awebox}
+J. De Schutter, R. Leuthold, T. Bronnenmeyer, E. Malz, S. Gros, M. Diehl, AWEbox: An Optimal Control Framework for Single- and Multi-Aircraft Airborne Wind Energy Systems, Energies, 2023.
+
+\end{thebibliography}
+
+\end{document}
