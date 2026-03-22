@@ -8,6 +8,7 @@ format:
     slide-number: true
     highlight-style: github
     html-math-method: mathjax
+    embed-resources: true
 execute:
   eval: false
   echo: true
