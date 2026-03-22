@@ -1,0 +1,126 @@
+---
+title: "Optimal Control with OptimalControl.jl"
+author: "Jean-Baptiste Caillau"
+date: "2026"
+format:
+  revealjs:
+    theme: simple
+    slide-number: true
+    highlight-style: github
+    html-math-method: mathjax
+execute:
+  eval: false
+  echo: true
+---
+
+## The Optimal Control Problem
+
+Find a control $u(t)$ minimizing the cost
+
+$$
+J(u) = \int_0^T \ell(x(t), u(t)) \, dt + g(x(T))
+$$
+
+subject to the dynamics
+
+$$
+\dot{x}(t) = f(x(t), u(t)), \quad x(0) = x_0
+$$
+
+and constraints $u(t) \in U$, $x(T) \in X_f$.
+
+---
+
+## Pontryagin Maximum Principle
+
+Define the **Hamiltonian**:
+
+$$
+H(x, p, u) = p \cdot f(x, u) - \ell(x, u)
+$$
+
+The optimal control satisfies, for almost every $t$:
+
+$$
+u^\star(t) = \arg\max_{u \in U} \, H(x^\star(t), p(t), u)
+$$
+
+where the **costate** $p(t)$ solves the adjoint equation:
+
+$$
+\dot{p}(t) = -\nabla_x H(x^\star(t), p(t), u^\star(t))
+$$
+
+---
+
+## Double Integrator — Problem Setup
+
+Minimum time control of $\ddot{x} = u$, $|u| \leq 1$:
+
+```julia
+using OptimalControl
+
+@def ocp begin
+    t ∈ [0, T], time
+    x ∈ R², state
+    u ∈ R,  control
+    x(0) == [-1, 0]
+    x(T) == [0, 0]
+    ẋ(t) == [x₂(t), u(t)]
+    -1 ≤ u(t) ≤ 1
+    T → min
+end
+```
+
+---
+
+## Double Integrator — Solving
+
+```julia
+sol = solve(ocp; display=false)
+plot(sol)
+```
+
+The optimal control is **bang-bang**: $u^\star(t) \in \{-1, +1\}$,
+with at most one switching time.
+
+Switching function: $\phi(t) = p_2(t)$
+
+$$
+u^\star(t) = \operatorname{sign}(\phi(t))
+$$
+
+---
+
+## NV Centre Hamiltonian
+
+Two-qubit system, drift + control:
+
+```julia
+# Pauli matrices
+σx = [0 1; 1 0] / 2
+σy = [0 -im; im 0] / 2
+σz = [1 0; 0 -1] / 2
+
+# NV Hamiltonian (rotating frame)
+H0 = 2π * δ * (σz ⊗ I₂)           # drift
+H1 = 2π * (σx ⊗ I₂)               # control x
+H2 = 2π * (σy ⊗ I₂)               # control y
+
+# Schrödinger equation
+Ẋ(t) = -im * (H0 + u₁(t)*H1 + u₂(t)*H2) * X(t)
+```
+
+---
+
+## Summary
+
+| Feature | Value |
+|---|---|
+| Framework | `OptimalControl.jl` |
+| Method | Indirect / direct shooting |
+| Integrator | Magnus (order 4) |
+| Unicode support | ∈ ⊗ ẋ → ∂ ∇ ✓ |
+
+- Full Julia ecosystem: `DifferentialEquations.jl`, `Plots.jl`
+- Open source: [control-toolbox.org](https://control-toolbox.org)
